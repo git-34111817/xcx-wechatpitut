@@ -1,0 +1,85 @@
+json.dumps()用于将dict类型的数据转成str，因为如果直接将dict类型的数据写入json文件中会发生报错，因此在将数据写入时需要用到该函数。jsObj = json.dumps(name_emb)  
+json.loads()用于将str类型的数据转成dict。jsLoads = json.loads(jsDumps)
+json.dump()用于将dict类型的数据转成str，并写入到json文件中。jsObj = json.dumps(name_emb) 
+ json.load()用于从json文件中读取数据。jsObj = json.load(open(emb_filename))  
+
+
+redis数据库命令查询解析：http://redisdoc.com/index.html
+
+https://pypi.tuna.tsinghua.edu.cn/simple/
+Xpath的第一个是从一开始的，而编程中的数组是从零开始的。
+
+redis修改远程访问
+ redis 开启远程访问权限
+　　1 开启redis端口访问权限
+　　  redis默认的端口是6379，要远程访问redis服务，确保服务器上的6379端口打开。
+　　1.1 查看打开的端口
+　   　/etc/init.d/iptables status
+　　1.2 开启端口
+    　　直接输入命令：iptables -A INPUT -p tcp --dport 6379 -j ACCEPT
+    　　或者编辑：vim /etc/sysconfig/iptables
+    　　最后一行添加：
+    　　-A RH-Firewall-1-INPUT -m state NEW -m tcp -dport 8080 -j ACCEPT
+　　2 修改redis配置文件/etc/redis/redis.conf
+　　2.1 将redis.conf 里的redis.conf bind127.0.0.1 这一行注释掉，任意IP都可以访问；找到 protected-mode yes (保护模式)改为 protected-mode no；保存之后重启redis
+		重启：/etc/init.d/redis-server restart
+安装scripy-redis
+	先安装redis,再安装scrapy.
+	pip install scrapy-redis
+使用：
+	一般引入正常的写redis数据库，之后进行将setting内填入四条数据，pipeline内填入一条redis
+	DUPEFILTER_CLASS = "sctap"   用redis的队列
+	SCHEDULER = 
+	切换继续执行。
+	''填入一个分布式，然后对其进行权重最尾处理
+分布式策略处理：
+	留着Rule
+	from scrapy_redis.spiders import RedisCrawlSpider
+	class DomeSpider(RedisCrawlSpider):
+		#start_urls= 注释掉
+		redis_key = "yyspider:start_urls"
+		
+		可以加动态域def __init__():
+		也可以不修改上边的domain固定划分在一个动态域中
+执行：
+	scrapy runspider yy.py  爬 虫启动，处于等待状态。
+	然后对数据库进行发送指令：lpush yyspider:start_urls +地址
+		
+
+启动scrapy-redis:  scrapy runspider myspider_redis.py
+
+REDIS_HOST = "192.168.1.1"
+REDIS_PORT = 6379
+
+smdp上传到Ubuntu
+打包 tar -cvf 包名.tar.gz 目录(加z的话要加后缀名.gz)
+打包 tar -cxvf 包名 目录  压缩
+发包：sftp python@192.168.21.84  回车输入密码
+	命令lls是本地的目录
+	上传 put youyuan.tar   下载是get   #(直接上传就行了)
+解包：tar -zvf youyuan.tar
+
+
+redis保存到本地MySQL
+import redis
+import pymongo
+import json
+import MySQLdb
+def process_item
+	rediscli = redis.Redis(host = '127.0.0.1',port = 3306,db = 0)
+	mysqlcli = MySQLdb.connect(host = "127.0.0
+1",prot = 3306, user = "power", passwd = "123456", db = "youyuan")
+	offset = 0
+	while True:
+		source,data = rediscli.blpop("yy:items")
+		item = json.loads(data)
+		try:
+			cursor = mysqlcli.cursor()
+			cursor.execute("insert into 数据库名 （列表名） value（%s,%s,%s）"%(值，值，值))
+			mysqlcli.commit()
+			cursor.close()
+			offset += 1
+		Exception:
+			pass
+if "__main__" == __name__:
+	process_item()

@@ -1,0 +1,137 @@
+﻿
+原始处理
+join
+split
+strip首位去除空格
+切片
+
+json
+
+
+从一个列表中选值   单值 =  random.choice(列表)。
+
+python中用None,其他语言中用NULL
+scrapy中文手册：https://docs.pythontab.com/scrapy/scrapy0.24/topics/request-response.html#topics-request-response-ref-request-userlogin
+
+正则，python和xpath处理
+
+取文本用。/text()  取参数需要。/@class
+
+>>> urljoin("http://www.google.com/1/aaa.html","bbbb.html")
+'http://www.google.com/1/bbbb.html'
+>>> urljoin("http://www.google.com/1/aaa.html","2/bbbb.html")
+'http://www.google.com/1/2/bbbb.html'
+>>> urljoin("http://www.google.com/1/aaa.html","/2/bbbb.html")
+'http://www.google.com/2/bbbb.html'
+>>> urljoin("http://www.google.com/1/aaa.html","http://www.google.com/3/ccc.html")
+'http://www.google.com/3/ccc.html'
+>>> urljoin("http://www.google.com/1/aaa.html","http://www.google.com/ccc.html")
+'http://www.google.com/ccc.html'
+>>> urljoin("http://www.google.com/1/aaa.html","javascript:void(0)")
+'javascript:void(0)'
+
+Xpath:
+	 /text()  xpath取文本值
+	 ./h4/text()表示在当前节点下取出h4的值。
+	多个语句加用‘|’写出
+	第一次直接写，第二次写./意思是从上一个节点往下走
+编码解码：
+	.extract()   #将匹配出来的字符转换成Unicode字符串
+	用path就要extract()，不加extract表示xpath匹配的对象，
+
+# coding:cp936
+
+yield先定义好让程序暂停，输出这个值。接收程序靠   变量.next()  去执行下一段
+
+json要先将字符串转换成字典类型，dict(字符串)  ，ensure_ascii= False
+
+response.body获取其中的文件
+
+ubuntu中打开创建好的文件
+	scrapy crawl name
+	scrapy crawl name -o itname.json  # 导出为某个文件
+windows中打开写好的文件
+	执行cmd命令行	import scrapy.cmdline
+			scrapy.cmdline.execute(['scrapy','crawl','demo'])
+					错误及解决方案
+					    def write(self, data, async=False):
+  						                            ^
+						SyntaxError: invalid syntax
+						打开目录的源码文件(错误提示里有)
+						将变量名async换一个名字，例如换成shark，(全部都替换掉)就可以编译过了
+						def write(self, data, shark=False):
+			def pause(self,item,spiders):
+				item.body   # 获取全部的内容
+				item.xpath()  #转化格式
+				item.text     #查找所有的text文本  #被访问对象是字典时，可以text["body"]访问
+			将JSON的网页数据转换成JSON，用chuan = json.loads(response.text)
+			将json转换成连续的字符串：string = ''.join(List_json)   #前面的‘str’表示在每个json最后加入str.
+			json.dumps(dict(item), ensure_ascii= False) 有中文的话要记的ensure_ascii= False
+			之后对其去数据。
+		        yield scrapy.Request(self.url + str(self.page) , callback=self.parse)   #创建出新的进程
+
+		re.sub(s1 ,s2,s3) 将s3里的s1所有的替换为s2
+
+可以将conslog中的信息传输保存到log日志中：
+            seting中设置
+                LOG_FILE = "LOG_FILE.log"
+                LOG_LEVEL ="INFO"
+                    等级，高可以包含低级
+                    #CRITICAL
+                    #ERROR
+                    #WARNINIG
+                    #DEUBG
+                    #INFO
+
+可以response.url获取出正在访问的URL。
+
+不写callback,follow默认使true，写了callback,follow默认使false
+
+获取Seting的两种方式：
+   1.导入import包，from scrapy.utils.project import get_project_settings
+     item = get_project_settings().get("dataname")
+    2. from scrapy.conf import settings
+        item = settings["dataname"]
+往本地下载图片：
+    1.用open(, 'r'),write.二进制写入
+    2.如果图片已经读取到位，则可以通过rename的方式，重新定位保存。os.rename(前地址,保存地址)
+    3.特定下载器框架下载
+
+登陆处理的三种方式：(POST)
+    下下策：直接拿网页的信息填（cookies,header,xslf）充到编程中，然后加到
+        def start_requests(self):
+            for url in self.start_urls:
+                yield scrapy.FormRequest(url, callback,cookies)   #headers在中间件中加入
+    有反爬虫机制册：
+            import scrapy
+            class LoginSpider(scrapy.Spider):
+                name = 'example.com'
+                start_urls = ['http://www.example.com/users/login.php']
+                def parse(self, response):
+                    找到值 _xsrf = response.xpath().extract()
+                    return scrapy.FormRequest.from_response(
+                        response,
+                        formdata={'username': 'john', 'password': 'secret','_xsrf': _xsrf},
+                        callback=self.after_login
+                    )
+                def after_login(self, response):
+                    # check login succeed before going on
+                    if "authentication failed" in response.body:
+                        self.log("Login failed", level=log.ERROR)
+                        return
+                    # continue scraping with authenticated session...
+    直接可以登陆的
+            import scrapy
+            class mySpider(scrapy.Spider):
+                def start_requests(self):
+                    url = 'http://www.renren.com/PLogin.do'
+                    # FormRequest 是Scrapy发送POST请求的方法
+                    yield scrapy.FormRequest(
+                        url = url,
+                        formdata = {"email" : "mr_mao_hacker@163.com", "password" : "axxxxxxxe"},
+                        callback = self.parse_page
+                    )
+                def parse_page(self, response):
+
+
+下载中间件：（处理USRTER-AGENT代理等的）

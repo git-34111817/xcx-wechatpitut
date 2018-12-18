@@ -1,0 +1,725 @@
+django模型的自关联设置：models设置成的外键设置成self
+数据转换.values   数据转换成字典
+
+1.python manage.py makemigrations      生成迁移
+2.python manage.py migrate            执行迁移
+        （注意）django使用外键
+            hbook = models.ForeignKey('BookInfo',on_delete=models.CASCADE,)
+            需要加on_delete=models.CASCADE,
+            '''在django2.0后，定义外键和一对一关系的时候需要加on_delete选项，此参数为了避免两个表里的数据不一致问题，不然会报错：
+                TypeError: __init__() missing 1 required positional argument: 'on_delete''''
+创建好的mysql包需要character=utf-8
+
+    元选项（可以定义数据库中表的名字，排序规则）
+        在模型类中定义类Meta，用于设置元信息
+        元信息db_table：定义数据表名称，推荐使用小写字母，数据表的默认名称
+            <app_name>_<model_name>
+            设置数据库的名字：
+                class BookInfo(models.Model):
+                    ...
+                    class Meta():
+                        db_table = 'bookinfo'
+        ordering：对象的默认排序字段，获取对象的列表时使用，接收属性构成的列表
+            class BookInfo(models.Model):
+                ...
+                class Meta():
+                    ordering = ['id']
+        字符串前加-表示倒序，不加-表示正序
+            class BookInfo(models.Model):
+                ...
+                class Meta():
+                    ordering = ['-id']
+        排序会增加数据库的开销
+
+
+    管理器
+        创建对象 （数据调用接口）
+            当创建对象时，django不会对数据库进行读写操作
+            调用save()方法才与数据库交互，将对象保存到数据库中
+            使用关键字参数构造模型对象很麻烦，推荐使用下面的两种之式
+            说明： _init _方法已经在基类models.Model中使用，在自定义模型中无法使用，
+            方式一：在模型类中增加一个类方法
+                class BookInfo(models.Model):
+                    ...
+                    @classmethod
+                    def create(cls, title, pub_date):
+                        book = cls(btitle=title, bpub_date=pub_date)
+                        book.bread=0
+                        book.bcommet=0
+                        book.isDelete = False
+                        return book
+                引入时间包：from datetime import *
+                调用：book=BookInfo.create("hello",datetime(1980,10,11));
+                保存：book.save()
+            方式二：在自定义管理器中添加一个方法
+                在管理器的方法中，可以通过self.model来得到它所属的模型类
+                class BookInfoManager(models.Manager):
+                    def create_book(self, title, pub_date):
+                        book = self.model()
+                        book.btitle = title
+                        book.bpub_date = pub_date
+                        book.bread=0
+                        book.bcommet=0
+                        book.isDelete = False
+                        return book
+                    def get_queryset(self):
+                        return super(BookInfoManager, self).get_queryset().filter(isDelete=False)
+
+                class BookInfo(models.Model):
+                    ...
+                    books = BookInfoManager()
+                调用：book=BookInfo.books.create_book("abc",datetime(1980,1,1))
+                保存：book.save()
+                在方式二中，可以调用self.create()创建并保存对象，不需要再手动save()
+                class BookInfoManager(models.Manager):
+                    def create_book(self, title, pub_date):
+                        book = self.create(btitle = title,bpub_date = pub_date,bread=0,bcommet=0,isDelete = False)
+                        return book
+                    def get_queryset(self):
+                        return super(BookInfoManager, self).get_queryset().filter(isDelete=False)
+                class BookInfo(models.Model):
+                    ...
+                    books = BookInfoManager()
+                调用：book=Book.books.create_book("abc",datetime(1980,1,1))
+                查看：book.pk
+
+            实例的方法
+                str (self)：重写object方法，此方法在将对象转换成字符串时会被调用
+                save()：将模型对象保存到数据表中
+                delete()：将模型对象从数据表中删除
+        数据库的缓存机制：
+            for ... in query:   将整个数据库全部缓存。
+            for ... in query[11:20]:   使用缓存里面的数据。
+
+            for ... in query[0:10]:  会读取数据库然后缓存。
+            但是第二次执行for ... in query[11:20]:   就不会缓存了。
+
+            所以可以自己存到redis。
+    查询集(管理器中设置)
+        在管理器上调用过滤器方法会返回查询集
+        查询集经过过滤器筛选后返回新的查询集，因此可以写成链式过滤
+        惰性执行：创建查询集不会带来任何数据库的访问，直到调用数据时，才会访问数据库
+        何时对查询集求值：迭代，序列化，与if合用
+        返回查询集的方法，称为过滤器
+            all()
+            filter()
+            exclude()
+            order_by()
+            values()：一个对象构成一个字典，然后构成一个列表返回
+    写法：
+        filter(键1=值1,键2=值2)
+        等价于
+        filter(键1=值1).filter(键2=值2)
+    返回单个值的方法
+        get()：返回单个满足条件的对象
+            如果未找到会引发"模型类.DoesNotExist"异常
+            如果多条被返回，会引发"模型类.MultipleObjectsReturned"异常
+        count()：返回当前查询的总条数
+        first()：返回第一个对象
+        last()：返回最后一个对象
+        exists()：判断查询集中是否有数据，如果有则返回True
+    限制查询集
+        查询集返回列表，可以使用下标的方式进行限制，等同于sql中的limit和offset子句
+        注意：不支持负数索引
+        使用下标后返回一个新的查询集，不会立即执行查询
+        如果获取一个对象，直接使用[0]，等同于[0:1].get()，但是如果没有数据，[0]引发IndexError异常，[0:1].get()引发DoesNotExist异常
+    查询集的缓存
+        每个查询集都包含一个缓存来最小化对数据库的访问
+        在新建的查询集中，缓存为空，首次对查询集求值时，会发生数据库查询，django会将查询的结果存在查询集的缓存中，并返回请求的结果，接下来对查询集求值将重用缓存的结果
+        情况一：这构成了两个查询集，无法重用缓存，每次查询都会与数据库进行一次交互，增加了数据库的负载
+            print([e.title for e in Entry.objects.all()])
+            print([e.title for e in Entry.objects.all()])
+        情况二：两次循环使用同一个查询集，第二次使用缓存中的数据
+            querylist=Entry.objects.all()
+            print([e.title for e in querylist])
+            print([e.title for e in querylist])
+        何时查询集不会被缓存：当只对查询集的部分进行求值时会检查缓存，但是如果这部分不在缓存中，那么接下来查询返回的记录将不会被缓存，这意味着使用索引来限制查询集将不会填充缓存，如果这部分数据已经被缓存，则直接使用缓存中的数据
+    字段查询
+        实现where子名，作为方法filter()、exclude()、get()的参数
+        语法：属性名称__比较运算符=值
+        表示两个下划线，左侧是属性名称，右侧是比较类型
+        对于外键，使用“属性名_id”表示外键的原始值
+        转义：like语句中使用了%与，匹配数据中的%与，在过滤器中直接写，例如：filter(title__contains="%")=>where title like '%\%%'，表示查找标题中包含%的
+    比较运算符
+        exact：表示判等，大小写敏感；如果没有写“ 比较运算符”，表示判等
+            filter(isDelete=False)
+        contains：是否包含，大小写敏感
+            exclude(btitle__contains='传')
+        startswith、endswith：以value开头或结尾，大小写敏感
+            exclude(btitle__endswith='传')
+        isnull、isnotnull：是否为null
+            filter(btitle__isnull=False)
+        在前面加个i表示不区分大小写，如iexact、icontains、istarswith、iendswith
+        in：是否包含在范围内
+            filter(pk__in=[1, 2, 3, 4, 5])
+        gt、gte、lt、lte：大于、大于等于、小于、小于等于
+            filter(id__gt=3)
+        year、month、day、week_day、hour、minute、second：对日期间类型的属性进行运算
+            filter(bpub_date__year=1980)
+            filter(bpub_date__gt=date(1980, 12, 31))
+        跨关联关系的查询：处理join查询
+            语法：模型类名 <属性名> <比较>
+            注：可以没有__<比较>部分，表示等于，结果同inner join
+            可返向使用，即在关联的两个模型中都可以使用
+            filter(heroinfo_ _hcontent_ _contains='八')
+        查询的快捷方式：pk，pk表示primary key，默认的主键是id
+            filter(pk__lt=6)
+    聚合函数
+        使用aggregate()函数返回聚合函数的值
+        函数：Avg，Count，Max，Min，Sum
+            from django.db.models import Max
+            maxDate = list.aggregate(Max('bpub_date'))
+        count的一般用法：
+            count = list.count()
+    F对象
+        可以使用模型的字段A与字段B进行比较，如果A写在了等号的左边，则B出现在等号的右边，需要通过F对象构造
+            list.filter(bread__gte=F('bcommet'))
+        django支持对F()对象使用算数运算
+            list.filter(bread__gte=F('bcommet') * 2)
+        F()对象中还可以写作“模型类__列名”进行关联查询
+            list.filter(isDelete=F('heroinfo__isDelete'))
+        对于date/time字段，可与timedelta()进行运算
+            list.filter(bpub_date__lt=F('bpub_date') + timedelta(days=1))
+    Q对象
+        过滤器的方法中关键字参数查询，会合并为And进行
+        需要进行or查询，使用Q()对象
+        Q对象(django.db.models.Q)用于封装一组关键字参数，这些关键字参数与“比较运算符”中的相同
+            from django.db.models import Q
+            list.filter(Q(pk_ _lt=6))
+        Q对象可以使用&（and）、|（or）操作符组合起来
+        当操作符应用在两个Q对象时，会产生一个新的Q对象
+            list.filter(pk_ _lt=6).filter(bcommet_ _gt=10)
+            list.filter(Q(pk_ _lt=6) | Q(bcommet_ _gt=10))
+        使用~（not）操作符在Q对象前表示取反
+            list.filter(~Q(pk__lt=6))
+        可以使用&|~结合括号进行分组，构造做生意复杂的Q对象
+        过滤器函数可以传递一个或多个Q对象作为位置参数，如果有多个Q对象，这些参数的逻辑为and
+        过滤器函数可以混合使用Q对象和关键字参数，所有参数都将and在一起，Q对象必须位于关键字参数的前面
+视图：(本质就是一个函数)
+    path没有正则匹配，url有正则匹配。
+    设置template:'DIRS': [os.path.join(BASE_DIR, 'templates')]
+    setting debugs = False
+    ALLOWED_HOSTS = ['*']
+    setting同级的目录下的urls.py设置加入
+        path(r'booktest/', include('booktest.urls',nameapace='name'), name='name')     #name和namespace为系统使用重定向的时候用的参数。
+    在应用中创建urls.py
+        加入网页匹配条件：（之前的booktest路径就没有了，匹配到的全是丢去原先之后的路径）
+            from django.conf.urls import url
+            urlpatterns = [
+                url(r'^\d+$', views.index),
+            ]
+    在views.py视图中加入：
+        from django.http import HttpResponse
+        def index(request):
+            return HttpResponse('Hello world!')
+        def index(request,p1):    p1：匹配的值会在这里，需匹配正则的时候加括号(?p<p1>+\d)，以便内部处理（正则的时候专用）
+            return HttpResponse('Hello world!')
+    错误视图：
+        404页面设置：
+            在Test目录下，创建templates文件夹
+            在文件夹下创建404.html/403.html/500.html文件
+            配置setting:
+                DEBUG = False  # 关闭Debug
+                TEMPLATES = [
+                    {
+                        'DIRS': ['templates/'],  # 配置tamplates文件路径
+                    },
+                ]
+                ALLOWED_HOSTS = [
+                    '192.168.1.12',  # 配置allowrd_hosts
+                ]
+        500
+        400
+
+    QueryDict：
+        定义在django.http.QueryDict
+        与python字典不同，QueryDict类型的对象用来处理同一个键带有多个值的情况
+        方法get()：根据键获取值
+        只能获取键的一个值
+        如果一个键同时拥有多个值，获取最后一个值
+        dict.get('键',default)
+        或简写为
+        dict['键']
+        方法getlist()：根据键获取值
+        将键的值以列表返回，可以获取一个键的多个值
+        dict.getlist('键',default)
+            hero = request.GET.getlist('a')
+                hero = request.GET["a"]
+    request:
+        GET
+            import django.http.request
+        一个键有一个值
+            def index(request):
+                hero = request.GET["a"]
+                content = {'hero': hero}
+                return render(request, 'bookinfo/index.html',content)
+        一个键中有多个值
+            def index(request):
+                hero = request.GET.getlist('a')
+                content = {'hero': hero}
+                return render(request, 'bookinfo/index.html',content)
+        POST
+            from中表格的name对应的request数据中的post键值
+            def postTest2(request):
+                uname=request.POST['uname']
+                upwd=request.POST['upwd']
+                ugender=request.POST.get('ugender')
+                uhobby=request.POST.getlist('uhobby')
+                context={'uname':uname,'upwd':upwd,'ugender':ugender,'uhobby':uhobby}
+                return render(request,'booktest/postTest2.html',context)
+    response:
+        构建cookies.
+               response.wirte可以直接把对应的值给写进去，然后直接return response  就会返回到网页中去
+
+        重定向：
+            HttpResponseRedirect
+                重定向，服务器端跳转
+                构造函数的第一个参数用来指定重定向的地址
+    session:
+        textTemp = s5dx
+        写入数据库：request.session['code'] = textTemp
+        读取数据库的值：code2 = request.session['code']
+
+模板：
+    属性的id可以用pk代替。pk=1
+    根目录创建templates
+    html设置：{{ 变量 }}或者{{ 变量.值 }}可以调用字典去使用。
+    view设置：
+        from .models import *
+        #coding:utf-8
+        from django.http import HttpResponse
+        def index(request):
+            hero = BookInfo.book.get(pk=1)
+            content ={'hero': hero}
+            return render(request, 'bookinfo/index.html', content)
+        对象值的调用：
+            在模板类中设置：
+                def showname(self):
+                    return self.name
+    标签：
+        { %for ... in ...%}
+        循环逻辑
+        {{forloop.counter}}表示当前是第几次循环
+        { %empty%}
+        给出的列表为或列表不存在时，执行此处
+        { %endfor%}
+            { %if ...%}
+            逻辑1
+            { %elif ...%}
+            逻辑2
+            { %else%}
+            逻辑3
+            { %endif%}
+        过滤器：（对HTML的样式进行处理）
+            语法：{ { 变量|过滤器 }}，例如{ { name|lower }}，表示将变量name的值变为小写输出
+            使用管道符号 (|)来应用过滤器
+            通过使用过滤器来改变变量的计算结果
+            可以在if标签中使用过滤器结合运算符
+            if list1|length > 1
+            求余数的过滤器
+                {% if forloop.counter | divisibleby:"2" %}
+            过滤器能够被“串联”，构成过滤器链
+            name|lower|upper
+            过滤器可以传递参数，参数使用引号包起来
+            list|join:", "
+            default：如果一个变量没有被提供，或者值为false或空，则使用默认值，否则使用变量的值 (默认不会转义)
+            value|default:"什么也没有"
+            date：根据给定格式对一个date变量格式化
+            value|date:'Y-m-d'
+            escape：详见“HTML转义”
+            点击查看详细的过滤器
+    反向解析：是的链接可以固定转向位置。
+    模板继承：
+
+
+    HTML转义：过滤器safe
+        转换大于小于单引号双引号和于号（&）
+        当使用views做content={"value" : "<h1>123</h1>"}输出时。页面<body>{{ value }}</body>
+        会直接输出<h1>123</h1>。
+        所以要进行代码转义：
+            在HTML中<body>{{ value|safe }}</body>
+            或者
+            {% autoescaoe off %}
+                <body>{{ value|safe }}</body>
+            {% endautoescaoe %}
+        不进行转义，可以不写或者
+            在HTML中<body>{{ value|escape }}</body>
+    csrf(防跨域攻击)：
+        只有post才会用到。
+        在form的表单中加入{% csrf_token %} 就行了
+            <from action="csrf2" method="post">
+                {% csrf_token %}
+                <input type="text" namr="uname">
+                <input type="submit" value="提交">
+            </from>
+    验证码：
+        安装PIL包，pip install Pillow
+            使用PIL中的Image,ImageDraw,ImageFont
+
+
+response
+session
+模板
+验证码的session的应用
+语言不是事
+分页
+ajax
+
+
+
+
+django高级：
+        静态文件：
+            STATIC_URL = '/static/'       #逻辑显示的路径（不是实际的显示位置）
+            STATICCFILES_DIRS = [
+                os.path.join(BASE_DIR, 'static'),        #static决定了真是路劲的匹配规则
+            ]
+        在根文件下创建static文件夹,然后再这个目录下再去细分应用文件加
+        模板中引入模块：
+            {% load static from staticfiles %}     #第一行加入
+            <img src="{% static "my_app/myexample.jpg" %}" alt="My image"/>
+        中间间：（先访问到url,然后访问view，然后访问html,最后返回到用户受中）
+            面向切面编程：在中间干预他，
+            其他编程语言（IOC  DI）
+            是一个轻量级、底层的插件系统，可以介入Django的请求和响应处理过程，修改Django的输入或输出
+            激活：添加到Django配置文件中的MIDDLEWARE_CLASSES元组中
+            每个中间件组件是一个独立的Python类，可以定义下面方法中的一个或多个
+                _init _：无需任何参数，服务器响应第一个请求的时候调用一次，用于确定是否启用当前中间件
+                process_request(request)：执行视图之前被调用，在每个请求上调用，返回None或HttpResponse对象
+                process_view(request, view_func, view_args, view_kwargs)：调用视图之前被调用，在每个请求上调用，返回None或HttpResponse对象
+                process_template_response(request, response)：在视图刚好执行完毕之后被调用，在每个请求上调用，返回实现了render方法的响应对象
+                process_response(request, response)：所有响应返回浏览器之前被调用，在每个请求上调用，返回HttpResponse对象
+                process_exception(request,response,exception)：当视图抛出异常时调用，在每个请求上调用，返回一个HttpResponse对象    #之后会有process_response调用。
+            使用中间件，可以干扰整个处理过程，每次请求中都会执行中间件的这个方法
+            示例：自定义异常处理
+            与settings.py同级目录下创建myexception.py文件，定义类MyException，实现process_exception方法
+                from django.http import HttpResponse
+                class MyException():
+                    def process_exception(request,response, exception):
+                        return HttpResponse(exception.message)
+            将类MyException注册到settings.py中间件中
+                MIDDLEWARE_CLASSES = (
+                    'test1.myexception.MyException',
+                    ...
+                )
+            定义视图，并发生一个异常信息，则会运行自定义的异常处理
+        图片上传：（必须为post请求）
+            当Django在处理文件上传的时候，文件数据被保存在request.FILES
+            FILES中的每个键为<input type="file" name="" />中的name
+            注意：FILES只有在请求的方法为POST 且提交的<form>带有enctype="multipart/form-data" 的情况下才会包含数据。否则，FILES 将为一个空的类似于字典的对象
+            使用模型处理上传文件：将属性定义成models.ImageField类型
+                pic=models.ImageField(upload_to='cars/')
+            注意：如果属性类型为ImageField需要安装包Pilow
+                pip install Pillow==3.4.1
+            图片存储路径
+                在项目根目录下创建media文件夹
+                图片上传后，会被保存到“/static/media/cars/图片文件”
+                打开settings.py文件，增加media_root项
+                     MEDIA_ROOT=os.path.join(BASE_DIR,"static/media")
+                创建到和manager同级的目录下media。
+            使用django后台管理，遇到ImageField类型的属性会出现一个file框，完成文件上传
+            手动上传的模板代码
+                <html>
+                <head>
+                    <title>文件上传</title>
+                </head>
+                <body>
+                    <form method="post" action="upload/" enctype="multipart/form-data">
+                        <input type="text" name="title"><br>
+                        <input type="file" name="pic"/><br>
+                        <input type="submit" value="上传">
+                    </form>
+                </body>
+                </html>
+            手动上传的视图代码
+                from django.conf import settings
+                def upload(request):
+                    if request.method == "POST":
+                        f1 = request.FILES['pic']
+                        fname = '%s/cars/%s' % (settings.MEDIA_ROOT,f1.name)
+                        with open(fname, 'w') as pic:
+                            for c in f1.chunks():
+                                pic.write(c)
+                        return HttpResponse("ok")
+                    else:
+                        return HttpResponse("error")
+        Admin站点：
+            1.创建管理员的用户名和密码：python manage.py createsuperuser然后按提示填写用户名、邮箱、密码
+            2.在应用内admin.py文件完成注册，就可以在后台管理中维护模型的数据
+                from django.contrib import admin
+                from models import *
+                admin.site.register(HeroInfo)
+                    查找admin文件：在INSTALLED_APPS项中加入django.contrib.admin，Django就会自动搜索每个应用的admin模块并将其导入
+            ModelAdmin对象
+            ModelAdmin类是模型在Admin界面中的表示形式
+            定义：定义一个类，继承于admin.ModelAdmin，注册模型时使用这个类
+                class HeroAdmin(admin.ModelAdmin):
+                    ...
+                    通常定义在应用的admin.py文件里
+            使用方式一：注册参数
+                admin.site.register(HeroInfo,HeroAdmin)
+            使用方式二：注册装饰器
+                @admin.register(HeroInfo)
+                class HeroAdmin(admin.ModelAdmin):
+            通过重写admin.ModelAdmin的属性规定显示效果，属性主要分为列表页、增加修改页两部分
+            列表页选项
+            “操作选项”的位置
+            actions_on_top、actions_on_bottom：默认显示在页面的顶部
+                class HeroAdmin(admin.ModelAdmin):
+                    actions_on_top = True
+                    actions_on_bottom = True
+                    list_display = ['id', 'btitle', 'bpud_date']     #渲染时列表显示的字段
+            list_display
+            出现列表中显示的字段
+            列表类型
+            在列表中，可以是字段名称，也可以是方法名称，但是方法名称默认不能排序
+            在方法中可以使用format_html()输出html内容
+            在models.py文件中
+                from django.db import models
+                from tinymce.models import HTMLField
+                from django.utils.html import format_html
+                class HeroInfo(models.Model):
+                    hname = models.CharField(max_length=10)
+                    hcontent = HTMLField()
+                    isDelete = models.BooleanField()
+                    def hContent(self):
+                        return format_html(self.hcontent)
+                在admin.py文件中
+                class HeroAdmin(admin.ModelAdmin):
+                    list_display = ['hname', 'hContent']
+            让方法排序，为方法指定admin_order_field属性
+                在models.py中HeroInfo类的代码改为如下：
+                    def hContent(self):
+                        return format_html(self.hcontent)
+                    hContent.admin_order_field = 'hname'
+            标题栏名称：将字段封装成方法，为方法设置short_description属性
+                在models.py中为HeroInfo类增加方法hName：
+                    def hName(self):
+                        return self.hname
+                    hName.short_description = '姓名'
+                    hContent.short_description = '内容'
+                在admin.py页中注册
+                class HeroAdmin(admin.ModelAdmin):
+                    list_display = ['hName', 'hContent']
+                list_filter
+            右侧栏过滤器，对哪些属性的值进行过滤
+            列表类型
+            只能接收字段
+            class HeroAdmin(admin.ModelAdmin):
+                ...
+                list_filter = ['hname', 'hcontent']
+            list_per_page
+            每页中显示多少项，默认设置为100
+                class HeroAdmin(admin.ModelAdmin):
+                    ...
+                    list_per_page = 10
+                search_fields
+            搜索框
+            列表类型，表示在这些字段上进行搜索
+            只能接收字段
+                class HeroAdmin(admin.ModelAdmin):
+                    ...
+                    search_fields = ['hname']
+            增加与修改页选项
+            fields：显示字段的顺序，如果使用元组表示显示到一行上
+            class HeroAdmin(admin.ModelAdmin):
+                ...
+                fields = [('hname', 'hcontent')]
+            fieldsets：分组显示
+            class HeroAdmin(admin.ModelAdmin):
+                ...
+                fieldsets = (
+                    ('base', {'fields': ('hname')}),
+                    ('other', {'fields': ('hcontent')})
+                )
+            fields与fieldsets两者选一
+            InlineModelAdmin对象
+            类型InlineModelAdmin：表示在模型的添加或修改页面嵌入关联模型的添加或修改
+            子类TabularInline：以表格的形式嵌入
+            子类StackedInline：以块的形式嵌入
+            class HeroInline(admin.TabularInline):
+                model = HeroInfo
+
+            class BookAdmin(admin.ModelAdmin):
+                inlines = [
+                    HeroInline,
+                ]
+            重写admin模板（拷贝到templates/admin目录下编辑即可，因为读取的时候有优先级）
+            在项目所在目录中创建templates目录，再创建一个admin目录
+            设置模板查找目录：修改settings.py的TEMPLATES项，加载模板时会在DIRS列表指定的目录中搜索
+            'DIRS': [os.path.join(BASE_DIR, 'templates')],
+            从Django安装的目录下（django/contrib/admin/templates）将模板页面的源文件admin/base_site.html拷贝到第一步建好的目录里
+            编辑base_site.html文件
+            刷新页面，发现以刚才编辑的页面效果显示
+            其它管理后台的模板可以按照相同的方式进行修改
+    分页：
+        对数据进行处理 ，已获得分页后的数据。
+        有固定的分页统计能力。
+    ajax:jquery
+
+第三方产品
+    富文本编辑器：
+            安装pip install django-tinymce
+        注意转义
+    应用到项目中
+        在settings.py中为INSTALLED_APPS添加编辑器应用
+            INSTALLED_APPS = (
+                ...
+                'tinymce',
+            )
+        在settings.py中添加编辑配置项
+            TINYMCE_DEFAULT_CONFIG = {
+                'theme': 'advanced',
+                'width': 600,
+                'height': 400,
+            }
+        在根urls.py中配置
+        from django.conf.urls import url,include
+            urlpatterns = [
+                ...
+                url(r'^tinymce/', include('tinymce.urls')),
+                path(r'mysqldemo/', include('mysqldemo.urls'), name='name'),
+            ]
+        在应用中定义模型的属性
+            from django.db import models
+            from tinymce.models import HTMLField
+            class HeroInfo(models.Model):
+                ...
+                hcontent = HTMLField()
+            在后台管理界面中，就会显示为富文本编辑器，而不是多行文本框
+    自定义使用
+        定义视图editor，用于显示编辑器并完成提交
+            def editor(request):
+                return render(request, 'other/editor.html')
+        配置url
+            urlpatterns = [
+                ...
+                url(r'^editor/$', views.editor, name='editor'),
+            ]
+        创建模板editor.html
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title></title>
+                <script type="text/javascript" src='/static/tiny_mce/tiny_mce.js'></script>
+                <script type="text/javascript">
+                    tinyMCE.init({
+                        'mode':'textareas',
+                        'theme':'advanced',
+                        'width':400,
+                        'height':100
+                    });
+                </script>
+            </head>
+            <body>
+            <form method="post" action="/content/">
+                <input type="text" name="hname">
+                <br>
+                <textarea name='hcontent'>哈哈，这是啥呀</textarea>
+                <br>
+                <input type="submit" value="提交">
+            </form>
+            </body>
+            </html>
+        定义视图content，接收请求，并更新heroinfo对象
+            def content(request):
+                hname = request.POST['hname']
+                hcontent = request.POST['hcontent']
+
+                heroinfo = HeroInfo.objects.get(pk=1)
+                heroinfo.hname = hname
+                heroinfo.hcontent = hcontent
+                heroinfo.save()
+
+                return render(request, 'other/content.html', {'hero': heroinfo})
+        添加url项
+            urlpatterns = [
+                ...
+                url(r'^content/$', views.content, name='content'),
+            ]
+        定义模板content.html
+                { %block block_name%}
+                这里可以定义默认值
+                如果不定义默认值，则表示空字符串
+                { %endblock%}
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title></title>
+            </head>
+            <body>
+            姓名：{{hero.hname}}
+            <hr>
+            {%autoescape off%}
+            {{hero.hcontent}}
+            {%endautoescape%}
+            </body>
+            </html>
+缓存:
+    设置缓存
+        通过设置决定把数据缓存在哪里，是数据库中、文件系统还是在内存中
+        通过setting文件的CACHES配置来实现
+        参数TIMEOUT：缓存的默认过期时间，以秒为单位，这个参数默认是300秒，即5分钟；设置TIMEOUT为None表示永远不会过期，值设置成0造成缓存立即失效
+            CACHES={
+                'default': {
+                    'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+                    'TIMEOUT': 60,
+                }
+            }
+        可以将cache存到redis中，默认采用1数据库，需要安装包并配置如下：
+        安装包：pip install django-redis-cache
+            CACHES = {
+                "default": {
+                    "BACKEND": "redis_cache.cache.RedisCache",
+                    "LOCATION": "localhost:6379",
+                    'TIMEOUT': 60,
+                },
+            }
+        可以连接redis查看存的数据
+            连接：redis-cli
+            切换数据库：select 1
+            查看键：keys *
+            查看值：get 键
+    单个view缓存
+        django.views.decorators.cache定义了cache_page装饰器，用于对视图的输出进行缓存
+        示例代码如下：
+            from django.views.decorators.cache import cache_page
+            @cache_page(60 * 15)
+            def index(request):
+                return HttpResponse('hello1')
+                #return HttpResponse('hello2')
+        cache_page接受一个参数：timeout，秒为单位，上例中缓存了15分钟
+        视图缓存与URL无关，如果多个URL指向同一视图，每个URL将会分别缓存
+    模板片断缓存
+        使用cache模板标签来缓存模板的一个片段
+        需要两个参数：
+            缓存时间，以秒为单位
+            给缓存片段起的名称
+        示例代码如下：
+            {% load cache %}
+            {% cache 500 hello %}
+            hello1
+            <!--hello2-->
+            {% endcache %}
+        底层的缓存API
+            from django.core.cache import cache
+            设置：cache.set(键,值,有效时间)
+            获取：cache.get(键)
+            删除：cache.delete(键)
+            清空：cache.clear()
+
+部署：(生产环境下用uwsgi)用nginx开启setting的socket。不用的话就用http
+    部署设置的setting debug=False   设置成False会导致静态文件不可处理的情况。所以在之前先调试好。
+    uwsgi是运行python代码的一个容器。实际中就不用python manager.py runserver
+        wsgi就像是一种协议。一种规定
+        而uwsgi则是一种接口，是一种快速的接口
+        pip install uwsgi
+
+GITHUB：
+    将版本一个一个的记录下来.
+    多人合作可以合并代码
+    分布式
+
+
+
+

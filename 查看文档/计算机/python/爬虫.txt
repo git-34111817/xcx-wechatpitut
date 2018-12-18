@@ -1,0 +1,572 @@
+世间最美好的东西就是发现者自己的心在笑.
+
+爬虫建议:
+	尽量减少请求次数,能抓列表不抓详情页,减轻服务器压力,程序员都是混口饭吃的.
+	不要只看web网站,手机APP和H5 这样的反爬虫措施一般比较少
+	实际应用的时候,一般方收到IP就结束了,除非很核心的数据,不会在进行更多的验证,毕竟成本问题会考虑到.
+	如果真的性能要求高,可以考虑到多线程,或者称述的框架如Scrapy 甚至是使用分布式.
+
+动态网页
+	JavaScript:它可以收集 用户的跟踪数据,不需要重载页面直接提交表单，在页面嵌入多媒体文件，甚至运行网页游戏。
+	jQuery:如果你在一个网站上看到了 jQuery，那么采集这个网站数据的时候要格外小心。jQuery 可 以动态地创建 HTML 内容,只有在 JavaScript 代码执行之后才会显示。如果你用传统的方 法采集页面内容,就只能获得 JavaScript 代码执行之前页面上的内容。
+	Ajax:如果提交表单之后，或从服务器获取信息之后，网站的页面不需要重新刷新，那么你访问的网站就在用Ajax 技术。
+	DHTML:
+解决动态网页:
+	1.解析js,取得有效代码.
+	2.用pyhton库运行javascript.
+
+去空格:  .strip()
+
+存储json文件 “互斥锁”
+
+队列：
+	import queue
+	#申明对象
+	list_queue = queue.Queue(10) #不填表示无限多个 
+	list_queue.put()
+	list_queue.get()
+	#get有个block属性，默认值为true
+		当队列为空，block为True的话，不会结束，会进入堵塞的状态，知道有数据
+		当队列为空，block为False的话，会抛出一个异常。
+	list_queue.empty()
+	list_queue.qsize()
+	list_queue.full()
+tedfd = []
+tedfd.append() #向列表中加入数据
+对父对象继承：
+	父对象.__init__(self)   #这个会初始化很多次
+	super(父对象,self).__init__()   #这个指挥初始化一次
+
+
+计算运行时间:
+	import unittest
+	class douyu(unittest.TestCase):
+		#初始化方法
+		def setUp(self):
+			self.driver = webdriver.PhantomJS()
+		#测试方法必须有test字样开头
+		def testDouyu(self):
+			self.driver.get("")
+		#测试结束执行的方式
+		def tearDown(self):
+	#启动测试模块
+	if __name__ == "__main__":
+		unittest.main()
+
+
+单CPU
+	单线程 运算比多线程快,当IO密集时运算更占优势  
+	多线程 运算慢,io处理更慢.但可做做人机交互  擅长于等待做网络处理
+多CPU
+	单线程 运算比多线程快,当IO密集时运算更占优势  擅长于等待做网络处理
+	多线程	解密大量数据运算
+多线程	常用与等待
+多进程	计算密集型数据
+对于单核单线程,单线程处理运算,io占优势.多线程处理人机交互
+多核多线程,单线程处理等待,密集型运算io还是要多线程(python用多进程)处理
+
+爬虫爬的时候用多线程(因为io特别多),统计的时候用多进程(大运算)
+
+技巧:处理字符串在前面加'r'就不会自动解析.
+python去重最快的方式是set
+获取响应有:URLopen open
+头处理器有
+	http处理器
+	代理处理器
+format对str数据进行处理.
+数据的item = item.replace("<p>","").item.replace("<br/>","")
+
+
+数据收集方式：
+	1企业自行收集的数据，有意识的收集数据。
+	2数据咨询公司 艾瑞 埃森哲，麦肯锡
+	3政府，中华人民共和国统计局做报表的统计数据
+	4第三方数据平台购买数据
+	5爬虫
+百度指数：index。baidu.com 搜索火热相关的
+阿里指数：购物相关的
+腾讯浏览指数：社交相关的
+新浪微指数：实时热词统计现在关键词比较火热
+中华人民共和国国家统计局data.stats.gov.cn
+世界银行统计data.worldbank.org.cn
+Nasdaq股票 www.nasdaq.com
+UNdata 联合国的数据data.un.org
+数据咨询公司 艾瑞 埃森哲，麦肯锡
+买数据：
+	数据堂www.datatang.com
+	贵阳大数据交易所trade.gbdex.com
+中国知网
+
+header
+	upgrade-Insecure-Requests: 1     升级当前权限为https
+	user-Agent:     当前用户的配置信息。
+	Accept-Encoding:表示当前的编解码操作。或者压缩。压缩之后如果没有解压可能会报乱码。一般不设置
+	q=1指的是前参数权重
+
+
+urllib2(py3中是urllib.request)
+
+urlopen不支持构造header,所以一般用request先构造传入urlopen之后再去读。
+urllib.request.urlopen(urllib.request.Request(url,data,headers)).read()
+.read()读取
+.getcode()获取成功的响应码
+.geturl()获取文件的url地址，防止重定向带来的麻烦
+
+random.choice([1,2,3,4])
+urllib.request.Reuqest()  带协议头的请求
+request.add_header("User-Agent",user_agent)  添加一个头到请求头里。
+request.get_header("User-agent")  获取请求头的内容，注意第一个字母必须大写，之后的每个字符必须是小写。
+
+url编码解码:
+	wd = {"wd" : "汉字内容"}   内容一般为字典类型。对信息进行处理。
+	print urllib.request(wd)
+	解码unquote()
+	.decode("utf-8")
+		.decode("gbk")
+在Pytho2.x中使用import urllib2――-对应的，在Python3.x中会使用import urllib.request，urllib.error。
+在Pytho2.x中使用import urllib――-对应的，在Python3.x中会使用import urllib.request，urllib.error，urllib.parse。
+	在Pytho2.x中使用import urlparse――-对应的，在Python3.x中会使用import urllib.parse。
+	在Pytho2.x中使用import urlopen――-对应的，在Python3.x中会使用import urllib.request.urlopen。
+	在Pytho2.x中使用import urlencode――-对应的，在Python3.x中会使用import urllib.parse.urlencode。
+	在Pytho2.x中使用import urllib.quote――-对应的，在Python3.x中会使用import urllib.request.quote。
+	在Pytho2.x中使用cookielib.CookieJar――-对应的，在Python3.x中会使用http.CookieJar。
+	在Pytho2.x中使用urllib2.Request――-对应的，在Python3.x中会使用urllib.request.Request。
+sublim全部替换:
+	^(.*): (.*)$
+	"\1" : "\2",
+py打开文件：
+	with open("dd.html",'w+',encoding="utf-8") as f:
+	    f.write(Response)
+
+代理请求:(默认的urllib.request.urlopen没有代理的功能.所以自己构建打开处理器HTTPHandler)
+	urllib.request.HTTPHandler()
+		#构建请求头.(debuglevel=1,获取出发送的请求头数据,header,cookies)
+		opener = urllib.request.build_opener(urllib.request.HTTPHandler(debuglevel=1))
+		#请求百度
+		request = urllib.request.Request("www.baidu.com")
+		#用自己构建的请求头访问百度
+		response = opener.open(request)
+西刺代理
+	(高匿(只有代理的IP),透明(有自己也有代理的IP))
+	httpproxy = urllib.request.ProxyHandler({"http" : "账号:密码@IP:端口"})#构建一个Handler处理器对象
+	没代理时要这样写:urllib.request.ProxyHandler({})
+	opener = urllib.request.build_opener(httpproxy)  #构建一个自定义的opener对象,参数是构建的处理器对象.
+	# 构建了一个全局的opener,之后所有的请求都可以用urlopen()方式去发送,也附带Handler的功能.
+		urllib.request.install_opener(opener)
+		request = urllib.request.Request("http://www.baidu.com")
+		print urllib.request.urlopen(request).read()
+			如果想随时切换IP,就不用安装上面的代理.
+			直接进行访问:
+				request = urllib.request.Request("http://www.baidu.com")
+				print opener.open(request)
+HTTPPasswordMgrWithDefaultRealm(),这个类会创建一个密码管理对象,用来保存和HTTP请求相关的授权信息
+ProxyBasicAuthHandler()授权代理处理器
+HTTPBasicAuthHandler()验证web客户端的授权处理器
+
+引用系统环境变量
+	import os
+	os.environ.get("获取头")  和ini一样
+import cookielib 
+py3 import cookielib
+HTTPCookoieProcessor()处理器
+
+
+cookies的自动收入,一般浏览器的处理方式.
+		import urllib.error,urllib.parse,urllib.request
+		import http.cookiejar
+
+		#构建coolie的对象
+		cookie = http.cookiejar.CookieJar()
+		#构建头对象处理器
+		cookie_handler = urllib.request.HTTPCookieProcessor(cookie)
+		#生成对象处理器
+		opener = urllib.request.build_opener(cookie_handler)
+		#向头中加入header
+		opener.addheaders = [("User-Agent","Mozilla/5.0(Wiondows)"),]
+
+		#信息
+		url = "http://www.baidu.com"
+		data = {"email":"@","password":"mima"}
+		data = urllib.parse.urlencode(data)
+		#构建请求头
+		request = urllib.request.Request(url,data=data)
+
+		#处理器对请求头的访问
+		reponse = opener.open(request)
+
+		#第二次对请求头的访问,就不需要对cookies的赋值了.
+		print reponse_deng = opener.open("http://www.baidu.com").read()
+
+正则模块re
+	re.compile("规则",re.I)   re.I表示忽略大小写   re.S表示全文匹配
+	re.match()从开始匹配然后返回
+	m.search("str11str")匹配下可以从任意一个位置查找    从文中不定位置匹配然后返回
+	m.search("str11str",1,5)只匹配1-5之间的数.
+	m.findall()匹配文中的所有
+	访问用m.group()
+	()括号表示分组  0表示全部.1之后依次表示各组
+	?表示0个或者一次
+	m.split("str")按照条件的切割
+	m.sub() 搜索以及替换
+	m.span()返回前面是空格的下标,也就是单词的下标
+
+数据清洗:
+		sudo apt-get install python-lxml
+		Windows :pip install lxml 
+	1.正则
+	2.xpath
+		//表示任意目录
+		[@class="cla"] 表示属性.
+		取值写完最后加.text
+			//div[@class="BDG_Image"]
+		直接@属性值:表示获取属性
+			ctrl+art+x
+		lxmlpython使用:
+			html = 处理器获取的网页源文件
+			content = etree.HTML(html)
+			link_list = content.xpath("xml的搜索条件")
+			for link in link_list:
+				link为获取到的每一个处理器头.
+		xpath的模糊查询作为根节点:contains(属性,模糊)
+			//div[contains(@id, "qiushi_tag_")]//h2
+		}
+CSS选择器:BeautifulSoup4
+	https://cuiqingcai.com/1319.html全部使用方法
+	pip install beautifulsoup4
+	然后pip install lxml
+		from bs4 import BeautifulSoup
+		bs = BeautifulSoup(html,"lxml")   构建调用lxml解析库
+		print zhi = bs.find("").get("value")	查找
+		print soup.prettify() 对网页进行格式化输出的
+		四大对象种类:
+			Tag 标签
+			NavigableString
+			BeautifulSoup
+			Comment
+
+bs4的使用方法
+	soup = BeautifulSoup(html)
+	print soup.prettify() //结构化数据
+	Tag
+		print soup.title
+		对于 Tag，它有两个重要的属性，是 name 和 attrs
+			print soup.name
+			print soup.head.name
+			#[document]
+			#head
+				对象本身比较特殊，它的 name 即为 [document]，对于其他内部标签，输出的值便为标签本身的名称。
+			attrs   获取属性
+				[]是对属性的修改
+				()是对属性的获取
+		获取标签的内容 string
+		.stripped_strings 输出的字符串中可能包含了很多空格或空行,使用 .stripped_strings 可以去除多余空白内容
+	遍历文档树
+		子节点遍历:
+			.contents
+			.children
+		所有子孙节点.descendants
+		获取所有的信息列表strings
+	搜索文档树:
+		find_all( "p(字符串 , 正则表达式 , 列表, True)" , id = "nihao" , recursive , text , **kwargs )
+		bs.find("input",attrs={"name" : "_xsrf"}).get("value")
+
+xsrf:禁止跨域值.会附带cookies访问对用户的合法身份进行确认.
+
+可以包含import requests   写起来更轻松.
+	sess = requests.Session()   Session处理器会自动处理cookies
+	headers = {"User-Agent" : ""}
+	html = sess.get("http://www.", data=data , header = headers) 
+	或者html = sess.port("http://www.", data=data , header = headers) 
+	print html.text
+
+import json
+	json->python
+		unicodestr = json.loads(html)把字符串解码转换成Python对象,从json到python的类型转化对照
+	python->json
+		unicodestr = json.dumps("list", ensure_ascii=False)  转换成str对象ensure_ascii=False一定要记得加.禁用ascii编码
+	jsonpath.jsonpath(unicodestr, "$..name")
+	JsonPath:
+		需要安装:
+			pip install jsonpath 
+				XPath	JSONPath	描述
+				/		$			根节点
+				.		@			现行节点
+				/		.or[]		取子节点
+				..		n/a			取父节点，Jsonpath未支持
+				//		..			就是不管位置，选择所有符合条件的条件
+				*		*			匹配所有元素节点
+				@		n/a			根据属性访问，Json不支持，因为Json是个Key-value递归结构，不需要。
+				[]		[]			迭代器标示（可以在里边做简单的迭代操作，如数组下标，根据内容选值等）
+				|		[,]			支持迭代器中做多选。
+				[]		?()			支持过滤操作.
+				n/a		()			支持表达式计算
+				()		n/a			分组，JsonPath不支持
+		import urllib.request,urllib.parse,urllib.error
+		import json
+		import jsonpath
+		webdate = urllib.request.urlopen("https://www.lagou.com/lbs/getAllCitySearchLabels.json").read().decode()
+		jsondate = json.loads(webdate)
+		print(jsonpath.jsonpath(jsondate,"$..name"))
+
+图像识别:
+	1.安装Tesseract
+		ubuntu:sudo apt-get tesseract-ocr
+
+动态网站
+	Selenium(没有内置浏览器)所以和PhantomJS无界面浏览器经常搭配.
+	pip install selenium
+	PhantomJS无界面浏览器
+		只能从它的官方网站http://phantomjs.org/download.html) 下载
+	from selenuim import webdriver
+	#导入Keys,可以操作键盘,标签,鼠标
+	from selenuim.webdriver.common.keys import Keys
+
+	# 导入 webdriver
+	from selenium import webdriver
+	# 要想调用键盘按键操作需要引入keys包
+	from selenium.webdriver.common.keys import Keys
+	# 调用环境变量指定的PhantomJS浏览器创建浏览器对象
+	driver = webdriver.PhantomJS()
+	# 如果没有在环境变量指定PhantomJS位置
+	# driver = webdriver.PhantomJS(executable_path="./phantomjs"))
+	# get方法会一直等到页面被完全加载，然后才会继续程序，通常测试会在这里选择 time.sleep(2)
+	driver.get("http://www.baidu.com/")
+	# 获取页面名为 wrapper的id标签的文本内容
+	data = driver.find_element_by_id("wrapper").text
+	# 打印数据内容
+	print data
+	# 打印页面标题 "百度一下，你就知道"
+	print driver.title
+	# 生成当前页面快照并保存
+	driver.save_screenshot("baidu.png")
+	# id="kw"是百度搜索输入框，输入字符串"长城"
+	driver.find_element_by_id("kw").send_keys(u"长城")
+	# id="su"是百度搜索按钮，click() 是模拟点击
+	driver.find_element_by_id("su").click()
+	# 获取新的页面快照
+	driver.save_screenshot("长城.png")
+	# 打印网页渲染后的源代码
+	print driver.page_source
+	# 获取当前页面Cookie
+	print driver.get_cookies()
+	# ctrl+a 全选输入框内容
+	driver.find_element_by_id("kw").send_keys(Keys.CONTROL,'a')
+	# ctrl+x 剪切输入框内容
+	driver.find_element_by_id("kw").send_keys(Keys.CONTROL,'x')
+	# 输入框重新输入内容
+	driver.find_element_by_id("kw").send_keys("itcast")
+	# 模拟Enter回车键
+	driver.find_element_by_id("su").send_keys(Keys.RETURN)
+	# 清除输入框内容
+	driver.find_element_by_id("kw").clear()
+	# 生成新的页面快照
+	driver.save_screenshot("itcast.png")
+	# 获取当前url
+	print driver.current_url
+	# 关闭当前页面，如果只有一个页面，会关闭浏览器
+	# driver.close()
+	# 关闭浏览器
+	driver.quit()
+
+	页面操作
+		Selenium 的 WebDriver提供了各种方法来寻找元素，假设下面有一个表单输入框：
+		<input type="text" name="user-name" id="passwd-id" />
+	那么：
+		# 获取id标签值
+		element = driver.find_element_by_id("passwd-id")
+		# 获取name标签值
+		element = driver.find_element_by_name("user-name")
+		# 获取标签名值
+		element = driver.find_elements_by_tag_name("input")
+		# 也可以通过XPath来匹配
+		element = driver.find_element_by_xpath("//input[@id='passwd-id']")
+
+	定位UI元素 (WebElements)
+		关于元素的选取，有如下的API 单个元素选取
+		find_element_by_id
+		find_elements_by_name
+		find_elements_by_xpath
+		find_elements_by_link_text
+		find_elements_by_partial_link_text
+		find_elements_by_tag_name
+		find_elements_by_class_name
+		find_elements_by_css_selector
+
+
+	By ID
+		<div id="coolestWidgetEvah">...</div>
+		实现
+			element = driver.find_element_by_id("coolestWidgetEvah")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			element = driver.find_element(by=By.ID, value="coolestWidgetEvah")
+	By Class Name
+		<div class="cheese"><span>Cheddar</span></div><div class="cheese"><span>Gouda</span></div>
+		实现
+			cheeses = driver.find_elements_by_class_name("cheese")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			cheeses = driver.find_elements(By.CLASS_NAME, "cheese")
+	By Tag Name
+		<iframe src="..."></iframe>
+		实现
+			frame = driver.find_element_by_tag_name("iframe")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			frame = driver.find_element(By.TAG_NAME, "iframe")
+	By Name
+		<input name="cheese" type="text"/>
+		实现
+			cheese = driver.find_element_by_name("cheese")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			cheese = driver.find_element(By.NAME, "cheese")
+	By Link Text
+		<a href="http://www.google.com/search?q=cheese">cheese</a>
+		实现
+			cheese = driver.find_element_by_link_text("cheese")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			cheese = driver.find_element(By.LINK_TEXT, "cheese")
+	By Partial Link Text
+		<a href="http://www.google.com/search?q=cheese">search for cheese</a>>
+		实现
+			cheese = driver.find_element_by_partial_link_text("cheese")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			cheese = driver.find_element(By.PARTIAL_LINK_TEXT, "cheese")
+	By CSS
+		<div id="food"><span class="dairy">milk</span><span class="dairy aged">cheese</span></div>
+		实现
+			cheese = driver.find_element_by_css_selector("#food span.dairy.aged")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			cheese = driver.find_element(By.CSS_SELECTOR, "#food span.dairy.aged")
+	By XPath
+		<input type="text" name="example" />
+		<INPUT type="text" name="other" />
+		实现
+			inputs = driver.find_elements_by_xpath("//input")
+			------------------------ or -------------------------
+			from selenium.webdriver.common.by import By
+			inputs = driver.find_elements(By.XPATH, "//input")
+	鼠标动作链
+		有些时候，我们需要再页面上模拟一些鼠标操作，比如双击、右击、拖拽甚至按住不动等，我们可以通过导入 ActionChains 类来做到：
+		示例：
+		#导入 ActionChains 类
+		from selenium.webdriver import ActionChains
+		# 鼠标移动到 ac 位置
+		ac = driver.find_element_by_xpath('element')
+		ActionChains(driver).move_to_element(ac).perform()
+		# 在 ac 位置单击
+		ac = driver.find_element_by_xpath("elementA")
+		ActionChains(driver).move_to_element(ac).click(ac).perform()
+		# 在 ac 位置双击
+		ac = driver.find_element_by_xpath("elementB")
+		ActionChains(driver).move_to_element(ac).double_click(ac).perform()
+		# 在 ac 位置右击
+		ac = driver.find_element_by_xpath("elementC")
+		ActionChains(driver).move_to_element(ac).context_click(ac).perform()
+		# 在 ac 位置左键单击hold住
+		ac = driver.find_element_by_xpath('elementF')
+		ActionChains(driver).move_to_element(ac).click_and_hold(ac).perform()
+		# 将 ac1 拖拽到 ac2 位置
+		ac1 = driver.find_element_by_xpath('elementD')
+		ac2 = driver.find_element_by_xpath('elementE')
+		ActionChains(driver).drag_and_drop(ac1, ac2).perform()
+	填充表单
+		我们已经知道了怎样向文本框中输入文字，但是有时候我们会碰到<select> </select>标签的下拉框。直接点击下拉框中的选项不一定可行。
+		<select id="status" class="form-control valid" onchange="" name="status">
+		    <option value=""></option>
+		    <option value="0">未审核</option>
+		    <option value="1">初审通过</option>
+		    <option value="2">复审通过</option>
+		    <option value="3">审核不通过</option>
+		</select>
+		Selenium专门提供了Select类来处理下拉框。 其实 WebDriver 中提供了一个叫 Select 的方法，可以帮助我们完成这些事情：
+		# 导入 Select 类
+		from selenium.webdriver.support.ui import Select
+		# 找到 name 的选项卡
+		select = Select(driver.find_element_by_name('status'))
+		# 
+		select.select_by_index(1)
+		select.select_by_value("0")
+		select.select_by_visible_text(u"未审核")
+		以上是三种选择下拉框的方式，它可以根据索引来选择，可以根据值来选择，可以根据文字来选择。注意：
+		index 索引从 0 开始
+		value是option标签的一个属性值，并不是显示在下拉框中的值
+		visible_text是在option标签文本的值，是显示在下拉框的值
+		全部取消选择怎么办呢？很简单:
+		select.deselect_all()
+	弹窗处理
+		当你触发了某个事件之后，页面出现了弹窗提示，处理这个提示或者获取提示信息方法如下：
+		alert = driver.switch_to_alert()
+	页面切换
+		一个浏览器肯定会有很多窗口，所以我们肯定要有方法来实现窗口的切换。切换窗口的方法如下：
+		driver.switch_to.window("this is window name")
+		也可以使用 window_handles 方法来获取每个窗口的操作对象。例如：
+		for handle in driver.window_handles:
+		    driver.switch_to_window(handle)
+	页面前进和后退
+		操作页面的前进和后退功能：
+		driver.forward()     #前进
+		driver.back()        # 后退
+	Cookies
+		获取页面每个Cookies值，用法如下
+		for cookie in driver.get_cookies():
+		    print "%s -> %s" % (cookie['name'], cookie['value'])
+		删除Cookies，用法如下
+		# By name
+		driver.delete_cookie("CookieName")
+		# all
+		driver.delete_all_cookies()
+	页面等待
+		注意：这是非常重要的一部分！！
+		现在的网页越来越多采用了 Ajax 技术，这样程序便不能确定何时某个元素完全加载出来了。如果实际页面等待时间过长导致某个dom元素还没出来，但是你的代码直接使用了这个WebElement，那么就会抛出NullPointer的异常。
+		为了避免这种元素定位困难而且会提高产生 ElementNotVisibleException 的概率。所以 Selenium 提供了两种等待方式，一种是隐式等待，一种是显式等待。
+		隐式等待是等待特定的时间，显式等待是指定某一条件直到这个条件成立时继续执行。
+	显式等待
+		显式等待指定某个条件，然后设置最长等待时间。如果在这个时间还没有找到元素，那么便会抛出异常了。
+		from selenium import webdriver
+		from selenium.webdriver.common.by import By
+		# WebDriverWait 库，负责循环等待
+		from selenium.webdriver.support.ui import WebDriverWait
+		# expected_conditions 类，负责条件出发
+		from selenium.webdriver.support import expected_conditions as EC
+		driver = webdriver.Chrome()
+		driver.get("http://www.xxxxx.com/loading")
+		try:
+		    # 页面一直循环，直到 id="myDynamicElement" 出现
+		    element = WebDriverWait(driver, 10).until(
+		        EC.presence_of_element_located((By.ID, "myDynamicElement"))
+		    )
+		finally:
+		    driver.quit()
+		如果不写参数，程序默认会 0.5s 调用一次来查看元素是否已经生成，如果本来元素就是存在的，那么会立即返回。
+		下面是一些内置的等待条件，你可以直接调用这些条件，而不用自己写某些等待条件了。
+		title_is
+		title_contains
+		presence_of_element_located
+		visibility_of_element_located
+		visibility_of
+		presence_of_all_elements_located
+		text_to_be_present_in_element
+		text_to_be_present_in_element_value
+		frame_to_be_available_and_switch_to_it
+		invisibility_of_element_located
+		element_to_be_clickable – it is Displayed and Enabled.
+		staleness_of
+		element_to_be_selected
+		element_located_to_be_selected
+		element_selection_state_to_be
+		element_located_selection_state_to_be
+		alert_is_present
+	隐式等待
+		隐式等待比较简单，就是简单地设置一个等待时间，单位为秒。
+		from selenium import webdriver
+		driver = webdriver.Chrome()
+		driver.implicitly_wait(10) # seconds
+		driver.get("http://www.xxxxx.com/loading")
+		myDynamicElement = driver.find_element_by_id("myDynamicElement")
+		当然如果不设置，默认等待时间为0。
+	

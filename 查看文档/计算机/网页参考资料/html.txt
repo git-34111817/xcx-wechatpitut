@@ -1,0 +1,207 @@
+sunlime:
+装插件：AutoFileName
+Alt+Shift+12345：分屏
+Ctrl+Shift+P：显示菜单命令
+Ctrl+B+K：显示左边栏
+编辑多行按Ctrl。
+在HTML中，定义css属性是不用给单位的。
+<!-- 这段是注释写法 -->
+.\当前目录。
+console.log("aaa")  #在网站后台看代码，能看到招聘邮箱，然后直接发送邮箱。
+get:获取数据	
+post：修改数据
+put：保存数据
+delete：删除
+option：询问服务器得某种支持特性
+head：返回报文头
+
+
+catch-contral:缓存控制，max-age:最大周期
+user-agent:指明这次客户使用什么浏览器内核去访问的，描述客户端的信息。
+
+http就是无状态的。不去记录状态，请求完就断了。
+
+200表示一个任务的完成成功了。
+
+
+sublim:
+h5快捷键：html:5+tab键
+	！+tab键
+html快捷键：html:xt+tab键
+
+
+html标签:
+head
+meta
+title
+body
+六个级别标题（搜索引擎优化会对这几个进行索引，靠前。非常重要）：
+	<h1>一级标题</h1>
+	<h2>二级标题</h2>
+	<h3>三级标题</h3>	
+	<h4>四级标题</h4>	
+	<h5>五级标题</h5>
+	<h6>六级标题</h6>
+段落标签：
+	<p>段落标签</p>
+强制换行：
+	<br>
+画一条线：
+	<hr>
+加空格：
+	一个空格：&nbsp;
+	css样式设计。
+显示尖括号：
+		大于号：&gt;
+		小lt;
+<div>块元素，表示一块内容，没有具体的语义。
+<span>行内元素，表示一行内的元素，没有实际语义。（给一行中加特定的样式。）
+搜索引擎会认识这些结构：所以经常用。
+<em>行内标签，表示语气中的强调词。
+<i>行内元素，：原本没有语义，w3w中加了语义，表示专业词汇。
+<b>：行内元素，原本没有语义，w3w中加了语义，文档中的关键词或者产品名。有加粗的意思。
+<strong>：行内元素，表示非常重要的内容。
+<img src="" alt="">
+<a href="www.baidu.com" title="这里是提示内容">content</a>
+#链接到页面顶部。
+<a href="javascript:;" title="这个链接器啥也不干">content</a>
+id和name都能达到跳转功能，但是name有时会失效。
+	加一个属性<p id="idname"></p> 
+	<a href="#idname" title="这行能达到跳转功能"></a>
+<a href="" target="_self"></a> 	#默认是self，也可以用其他的
+<a href="" target="_blank"></a> 	#默认是self，blank表示新建立一个窗口。
+<a href="" target="_blank"></a> 	#默认是self，内嵌框架。
+列表：
+有序列表：（一般不用）
+<ol>
+	<li></li>
+	<li></li>
+	<li></li>
+</ol>
+无序列表：
+<ul>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+去掉他的点：list-style:none;
+快捷键：ul>(li>a)*3 +tab键。
+<ul>
+	<li><a href=""></a></li>
+	<li><a href=""></a></li>
+	<li><a href=""></a></li>
+</ul>
+
+做问答题用的列表：
+dl>（dt+dd）*3  #平级用加法 多条用乘法 嵌套用大于号。 dt和dd是并列的。
+<dl>
+	<dt>大标题</dt>
+	<dd><a href="">内容</a></dd>
+	<dt>大标题</dt>
+	<dd><a href="">内容</a></dd>
+	<dt>大标题</dt>
+	<dd><a href="">内容</a></dd>
+</dl>
+表格：table定义表格。tr定义一行、td表示一格子,th表示字段（th和td相同。th一般在上边）
+	<table>
+		<th>序号</th>
+		<th>产品名称</th>
+		<tr>
+			<td>1</td>
+			<td>苹果</td>
+		</tr>
+	</table>
+table有的属性：(当设置多格子时，改一行列就行了。多使用百分比)
+	border=123456
+	width=100rpx
+	high=100rpx
+	align=center/lift/right  #设置水平对齐方式
+	valign=top/middle/bottom   #设置垂直对齐方式
+	colspan="10"   #水平单元格合并,一行中占几格。
+	rowspan   #垂直单元格合并
+	cellpadding="10"   #设置单元格四周之间的距离。
+	cellspacing="10"   #设置单元格与单元格之间的距离。
+table是传统布局。
+<label for="">标题框</label><!-- for定义为与指向ID同级 -->
+<input type="text、password、radio、checkbox、file" name="设置成一样表示同级" id="唯一标识">
+<select>
+	<option>北京</option>
+	<option>上海</option>
+	<option>天津</option>
+	<option>河北</option>
+	<option>厦门</option>
+</select>
+<input type="submit" name="" value="提交"> <!--按钮-->
+<input type="reset" name="" value="重置">
+表单：（提交会当做参数提交http://www.baidu.com？username=...）
+<form action="http://www.baidu.com" method="POST">
+	<div>
+		<!-- for属性为id相同的内容，可以设置父容器。多用在单选框和多选框中 -->
+		<label for="username">用户名：</label>
+		<input type="text" name="username" id="username">
+	</div>
+	<div>
+		<label for="ppword">密码：</label>
+		<input type="password" name="ppword" id="ppword">
+	</div>
+	<!-- name=gander设置相同，用作单选框唯一标识。 -->
+		<label>性别：</label>
+		<input type="radio" name="gander" id="male" value="0"><label for="male">男</label>
+		<input type="radio" name="gander" id="wemale" value="1"><label for="wemale">女</label>
+	</div>
+	<div>
+		<!-- name=like设置相同，用作多选框唯一标识。 -->
+		<label for="like">爱好：</label>
+		<input type="checkbox" name="like" value="eat">吃饭
+		<input type="checkbox" name="like" value="sleep">睡觉
+	</div>
+	<div>
+		<!-- type="file"，标识上传文件。 -->
+		<label for="photofile">照片：</label>
+		<input type="file" id="photofile">
+	</div>
+	<div>
+		<!-- 标识选择器 -->
+		<label for="">籍贯：</label>
+		<select name="jg">返回的是文本类型;
+			<option value="bj">北京</option>
+			<option value="sh">上海</option>
+			<option value="tj">天津</option>
+			<option value="hb">河北</option>
+			<option value="xm">厦门</option>
+		</select>
+	</div>
+	<div>
+		<label>个人描述：</label>
+		<textarea name="ms"></textarea>
+	</div>
+	<div>
+		<input type="submit" name="" value="提交">
+		<input type="reset" name="" value="重置">
+		<input type="button" name="" value="按钮">
+		<input type="hidden" name="不会显示，但是会传递过去" value="" id="">
+		<input type="image" name="" src=""><!--一般不用这个，这个会导致提交两次-->
+		<input type="text" name="" disabled>表示控件失效。
+	</div>
+</form>
+	.box{display: none;}
+	.touch:checked + .box{display: block;}
+	<input type="checkbox" class="touch">
+	<label class="box">我要隐藏这里</label>
+///
+<input type="text" name="" disabled>
+css
+input：disabled{	background-color:red;}表示控件失效并且背景色是红色的。
+enabled{}可用的表单控件。
+disabled{}失效的表单控件。
+checked{}选中的checkbox。
+///
+内嵌框架：frameborder边框类型。scrolling是否有滚动条。
+<a href="http://www.baidu.com" target="iframesrc">转换到百度网</a>
+<iframe src="另外一个网页的地址。" name="iframesrc" frameborder="0" scrolling="no"></iframe>
+
+移动端：
+视口：
+	适配移动端head加入：meta:vp+tab
+	<meta name="viewport" content="width=device-width宽度, user-scalable=no可否放大缩小, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0 三个版本">
+图片一般上传2倍大小，因为Apple是二倍读取。防虚。三倍像素也传二倍图片。

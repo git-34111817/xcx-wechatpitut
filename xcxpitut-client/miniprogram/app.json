@@ -1,18 +1,47 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/userConsole/userConsole",
-    "pages/storageConsole/storageConsole",
-    "pages/databaseGuide/databaseGuide",
-    "pages/addFunction/addFunction",
-    "pages/deployFunctions/deployFunctions",
-    "pages/chooseLib/chooseLib"
+    "pages/feel/feel",
+    "pages/service/service",
+    "pages/me/me"
+
+
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTitleText": "太原理工大学现代科技学院",
     "navigationBarTextStyle": "black"
+  },
+
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/TabBar/TBindex.png",
+        "selectedIconPath": "images/TabBar/TBindexj.png"
+      },
+      {
+        "pagePath": "pages/feel/feel",
+        "text": "Feel",
+        "iconPath": "images/TabBar/TBfeel.png",
+        "selectedIconPath": "images/TabBar/TBfeelj.png"
+      },
+      {
+        "pagePath": "pages/service/service",
+        "text": "服务",
+        "iconPath": "images/TabBar/TBservice.png",
+        "selectedIconPath": "images/TabBar/TBservicej.png"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的",
+        "iconPath": "images/TabBar/TBuser.png",
+        "selectedIconPath": "images/TabBar/TBuserj.png"
+      }
+    ]
   }
+
 }

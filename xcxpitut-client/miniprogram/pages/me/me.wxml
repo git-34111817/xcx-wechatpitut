@@ -1,0 +1,11 @@
+<view class='HeadLBackground'>
+<view class='marginauto'>
+    <image class='userphoto' mode='aspectFit' src='{{HeadPhotoLink}}'></image>
+    <view class='textaligncenter'>请登录</view>
+</view>
+</view>
+
+<view class='HeadRBackground'>
+  <text>你好这里是cctv</text>
+
+</view>

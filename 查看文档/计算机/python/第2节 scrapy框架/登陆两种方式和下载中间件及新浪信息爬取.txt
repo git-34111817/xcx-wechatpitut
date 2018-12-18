@@ -1,0 +1,14 @@
+先装redis,然后装scrapy.。最后在装scrapy-redis
+redis存储到mongo
+刷课件
+
+所有流程控件
+
+抓电影榜单  movie.douban.com/top250
+新浪整站爬取
+mangdb
+密码暴力破解
+
+30000*500
+
+100000/

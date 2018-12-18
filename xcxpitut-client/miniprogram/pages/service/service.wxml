@@ -1,0 +1,35 @@
+<view class="Bg-white">
+  <view class='Title-cla'>综合教务</view>
+  <!-- 此处处理分块，切换到行模式，由服务器处理接收js处理添加代码 -->
+  <view class=''>
+  
+  </view>
+</view>
+
+<view class='bg-line-block'></view>
+
+<view class="Bg-white">
+  <view class='Title-cla'>办公教务</view>
+
+</view>
+
+<view class='bg-line-block'></view>
+
+<view class="Bg-white">
+  <view class='Title-cla'>生活教务</view>
+
+</view>
+
+<view class='bg-line-block'></view>
+
+<view class="Bg-white">
+  <view class='Title-cla'>互动教务</view>
+
+</view>
+
+<view class='bg-line-block'></view>
+
+<view class="Bg-white">
+  <view class='Title-cla'>统计教务</view>
+
+</view>

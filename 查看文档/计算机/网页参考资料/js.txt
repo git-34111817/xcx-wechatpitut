@@ -1,0 +1,858 @@
+搜搜style.css的用法
+
+
+
+/:除
+%：求余
+js中操作属性全部用引号引起来。
+循环奇偶关系可以用if模。
+js的预解析功能特别强大的，不用注意函数顺序。
+输入框的属性：
+	onclick""
+	元素中加入。
+	head中加入（直接运行）：	<script type="text/javascript">	</script>
+	外链式： <script type="text/javascript" src="">	</script>
+选择器中的，指的是两者简写。
+30ms动一个数据会让一个东西更加平缓。
+jQuery中要经常用show和hide。来达到显示和隐藏。或者fadein和fadeout。
+js头一般要独立出来，单独引用成一个文件。
+
+注释：//
+	/**/
+写弹框为了不影响其他的结构，一般会在最底部加入一个样式元素。position:fixed;
+当突然设置position的时候应该设置一个div来顶替他。
+所有选择器：
+
+
+定义变量：var a = 1;
+全局变量：要不在最外层定义要不 a = 1；一般不用这种。
+	类型：number string boolean undefined(没有给值，只给出了变量) null
+	一种复合类型：object
+	变量名区分大小写
+	第一字符必须是字母或者是下划线或者是￥美元符号
+		这样直接写一般是预处理：document.getElementById('div1').title = "title的设置。";
+当整个页面执行完再执行这段代码：
+	window.onload = function(){
+		var OA = document.getElementById('div1');id选择器
+		oA.title = "title的设置。";//一般命名变量以o开头，object。驼峰式的命名法。
+		alert(OA.id);
+		oA.style.color = red;
+		oA.style.font-size = 10px; 这样写错误
+		oA.style.fontSize = 10px;
+		有-的去掉后面的大写，写成驼峰式的。
+		class不能写，要写成className。
+	}
+	操作属性的方法：
+		1.点变量。
+		*2.用中括号包起来想用变量的时候用中括号包起来[].
+	属性修改之后，修改标签的内容:
+		var OA = document.getElementById('div1');
+		div1.innerHTML = '元素的内容';  #后面不要加括号。
+		div1的元素内容为'元素的内容'。修改他们一定要记得加引号。
+	函数：
+		function 函数名（）{...}
+	调用:
+		1.函数名();
+		2.在HTML元素内部onclick"函数名()"一般不用这种。而是这种一般是设置ID，然后用Javascript设置onclick的值，设置好后document.getElementById('div1')。onclick=函数名；记住这里不能有括号，意思是指向他。
+函数和变量会预解析。
+
+按钮点击：
+	HTML中定义ID
+	ID.onclick = function(){}
+
+匿名函数：(简化写代码)
+	oDiv.onclick = function(){
+		alert('hello!');
+	}
+value是获取值,获取内容:
+		var OA = document.getElementById('div1');
+		OA.onclick = function(){alert(OA.value);}
+$$而且，||或者 ！否。
+
+if(不成立){如果写显示隐藏：注意初始化元素参数为空
+	成立
+}else{
+	不成立
+}
+switch(){
+	case 1:
+	alert("1");
+	break;
+	case 2:
+	alert("2");
+	break;
+	default:
+	alert("3");
+}
+
+数组：
+	var aRr = new Array(1,2,3,'abc');
+	性能高：var aRr = [1,2,3,'abc'];
+	二维数组：var aRr = [[1,2,3],'abc'];aRa[0][1]
+	查看数组长度：alert(aRr.length);
+	join（）将数组成员通过一个分割符合并成字符创。var arrstr = aRr.join('-');
+	push()和pop()从数组最后增加成员或者删除成员。
+	unshift()和shift（）从数组前面增加成员或者删除 成员。
+	reserse()将数组反转。aRr.reserse();
+	indexOf（）返回数组中元素第一次出现的索引值。aRr.indexOf（1），1第一次出现的位置。
+	splice()在数组中增加或删除成员。aRr.splice(2,1)；从第二个位置删除一个元素。aRr.splice(2,1，‘e’)；先删除一个元素再添加e到该前位置。
+	aRr.splice(2,4，‘e’，‘f’，‘g’，‘h’)；
+
+获取页面所有的li的属性：（指的一组标签）
+	var aLi = document.getElementsByTagName('li');元素标签选择器
+	alert(aLi.length);
+	aLi[1];
+	通过ID固定范围：
+		var OA = document.getElementById('div1');
+		var aLi = OA.getElementsByTagName('li');
+
+三等会对数据的类型进行匹配。
+
+循环：(for的效率很高，市面上用的比较多)
+	var i = 1；
+	while(if){
+			。。。
+			i++;
+	}
+	for(var i=1;i<len;i++){
+
+	}
+
+数组去重：
+	利用indexOf（）返回数组中元素第一次出现的索引值。比较一个循环搞定！indexOf（）说的是位置。
+	循环ALi.indexOf()=i；ALi2.pop();
+
+字符串处理方式：可以和数组组合在一块：
+	1、字符串合并操作：“ + ”
+	2、parseInt() 将数字字符串转化为整数
+	3、parseFloat() 将数字字符串转化为小数
+	4、split() 把一个字符串分隔成字符串组成的数组
+	5、charAt(10) 获取字符串中的第十个字符
+	6、indexOf('yahei') 查找字符串是否含有某字符, 没有返回-1。
+	7、substring() 截取字符串 用法： substring(start,end)（不包括end）
+	8、toUpperCase() 字符串转大写
+	9、toLowerCase() 字符串转小写
+	字符串反转：
+		var str = 'asdfj12jlsdkf098';
+		var str2 = str.split('').reverse().join('');
+		出现精度丢失时候0.1+0.3=0.4000004两个数都乘100相加解决。
+
+调试输出：
+	alert（‘’）；
+	console.log("");
+	document.title = '';
+
+NaN==NaN弹出false；所以不要对NaN进行比较。
+判断NaN用函数：isNaN('');
+
+定时器：
+	制作动画
+	异步操作
+	函数缓冲与节流
+
+  定时器：
+    setTimeout  只执行一次的定时器 
+    clearTimeout 关闭只执行一次的定时器
+    setInterval  反复执行的定时器
+    clearInterval 关闭反复执行的定时器
+	只执行一次的定时器：
+		setTimeout(函数名,2000);  #2秒钟执行函数名的函数。
+		var timer = setTimeout(function(){...},3000;)
+		clearTimeout(timer);   #关闭定时器。
+	反复执行定时器：
+		setInterval(函数名,2000);  #2秒钟执行函数名的函数。
+		var timer = setInterval(function(){...},3000;)
+		clearInterval(timer);   #关闭定时器。
+
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth()+1;  #0-11表示12个月；
+    var date = now.getDate();
+    var week = now.getDay();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var str = '当前时间是：'+ year + '年'+month+'月'+date+'日 '+toweek(week)+' '+todou(hour)+':'+todou(minute)+':'+todou(second);
+    oDiv.innerHTML = str;
+
+内置对象：
+	var backURL = document.referrer；  //获取上一个跳转页面的地址(需要服务器环境)
+	location： 
+	window.location.href ="www.baidu.com"; //获取或者重定url地址
+	var dal = window.location.search; //获取地址参数部分
+	window.location.hash //获取页面锚点或者叫哈希值  地址栏最后加上#12.就能输出#12
+	Math：
+	var random = Math.random() 获取0-1的随机数
+	Math.floor 向下取整
+	Math.ceil 向上取整
+取随机数：取出10-20之间的数值；取整数会遗漏一个数，向上取整这样var random =Math.ceil( Math.random()*(b-a-1)+a);在前面括号加，注意概率问题。
+	var random = Math.random()*(20-10)+10;
+	var random = Math.random()*(b-a)+a;
+闭包：里面定义的变量不会影响到全局。一般做测试时候加这两条
+	;(function(){
+		功能...
+	})();
+	或者
+	;！function(){...}();
+	或者
+	;~function(){...}();
+变量形式定义，先定义后才能用：
+	var fun = function(){}
+增加窗口监听事件：
+	windows.addEventListener('resize',函数名);  resize是指监听窗口。
+三木运算：
+	x>y ? x:y;
+
+闭包：函数嵌套
+	子函数可以调用父函数的变量。
+	常驻内存：在内存中不会被垃圾机制回收。
+	闭包可以改成封闭函数的形式
+	作用：
+		1.将一个变量长期驻扎在内存当中，可用于循环中存索引值。当遇到不能存索引值时要想到闭包。
+		2.私有变量的计数器，防止被外部污染。通过函数来访问。
+封闭函数和闭包的区别是:闭包有return，封闭函数没有。
+封闭函数的应用是做测试，内部的变量是独立一块的不会影响外面的全局变量：（注意写法，封闭函数前面要加一个封号，还不如用高手的！号。）
+	；(function(){
+		function() 函数名{
+			...此处定义var不会影响外面的函数
+		}
+		函数名（）
+		})
+
+面向对象：
+	可以用键值对字典的形式。
+	var tom = {
+		name:"tom",
+		age:18,
+		showname:function(){alert(this.name);},
+		showage:function(){alert(this.age);}
+	}
+	工厂模式：(一般用这种)
+		function Person(name,age,job){
+			var o = new Object();  #设置一个空对象然后往这个对象中加东西。
+			也可以这样写：var o = {};
+			o.name = name;
+			o.age = age;
+			o.job = job;
+			o.showname = function(){alert(this.name);}
+			return o;
+		}
+		var tom = Person("tom",18,'IT');
+		构造函数：js中没有class.
+		function Person(name,age,job){
+			this.name = name;
+			this.age = age;
+			this.job = job;
+			this.showname = function(){alert(this.name);}
+			return this;
+		}
+		var tom =new Person("tom",18,'IT');
+		tom.showname();
+	原型模式：
+		function Person(name,age,job){
+			this.name = name;
+			this.age = age;
+			this.job = job;
+		}
+		Person.protopyte.showname = function(){alert(this.name);}   #protopyte就是他里面的东西。
+		Person.protopyte.showage = function(){alert(this.age);}
+
+		var tom =new Person("tom",18,'IT');
+		var Jack =new Person("Jack",21,'Worker');
+		tom.showname();
+		构造函数先从外面的函数中找然后在自己的内部prototype找。
+继承：
+	重点：call和apply能改变this的对象，区别是前者直接写就行，后者要以数组的形式写。
+	继承就是属性的共享。
+		function Person(name,age){//父类
+			this.name = name;
+			this.age = age;
+			this.job = job;
+		}
+		Person.protopyte.showname = function(){alert(this.name);}   #protopyte就是他里面的东西。
+		Person.protopyte.showage = function(){alert(this.age);}
+		function Personnew(name,age,job){//子类
+			Person.call(this,name,age);//继承
+			this.job = job;
+		}
+		Personnew.protopyte = new Person();//继承
+		Person.protopyte.showname = function(){alert(this.name);}   #protopyte就是他里面的东西。
+		Person.protopyte.showage = function(){alert(this.age);}
+		var tom =new Personnew("tom",18,'IT');//就能使用里面的东西了。
+
+
+元素的未填但是要访问的默认值为空值，所以做好if处理。
+jQuery的两个新的原生选择器：
+	document.querySlector('#div1')  id选择器。
+	document.querySlectorAll('.list li');可以选多个   class全部加.  list下的全部li
+鼠标滚轮一般滚动式200ms;
+30ms
+手指触摸一般是750ms；
+安装提示器：
+Ctrl+alt+p -> install -> jQuery
+网络连接jquery网站：www.bootcdn.cn
+jquery:
+取input中的值：var val = $(this).val()或者var val = $(#div1).val()
+				
+	<script type="text/javascript" src="python/jquery-1.12.4.min.js"></script>   /
+	<script type="text/javascript" src="python/jquery.cookie.js"></script>   /
+	<script type="text/javascript" src="python/jquery.mousewheel.js"></script>   /
+	<script type="text/javascript" src="python/jquery-ui.min.js"></script>   /
+	$(document).ready(function(){  //ready和onlode一样但是ready速度更快一些，所以市面上用的多
+		var $div = $('#div');
+		alert($div.html()+'div的元素内容')；
+	})
+	简写：$(function(){  //写一个$在写一个匿名函数就行了
+		var $div = $('#div');
+		alert($div.html()+'div的元素内容')；
+	})
+
+	写样式：
+		$(document).css({});  #整个文档
+		$('#div1').css({color:'pink'});  #id选择器
+		$('.div1').css({color:'pink'});  #标签选择器
+		$('#div1 li').css({color:'pink'});  #层级选择器 ID选择器下的li标签选择器
+		$('input[name first]');属性选择器，选择name属性为first的input元素。
+	CSS下的伪类：
+		 对选择集进行修饰过滤(类似CSS伪类)
+			$('#ul1 li:first') //选择id为ul1元素下的第一个li
+			$('#ul1 li:odd') //选择id为ul1元素下的li的奇数行
+			$('#ul1 li:eq(2)') //选择id为ul1元素下的第3个li
+			$('#ul1 li:gt(2)') // 选择id为ul1元素下的前三个之后的li
+			$('#myForm :input') // 选择表单中的input元素
+			$('div:visible') //选择可见的div元素
+ 	对选择集进行函数过滤
+			$('div').has('p'); // 选择包含p元素的div元素
+			$('div').not('.myClass'); //选择class不等于myClass的div元素
+			$('div').filter('.myClass'); //选择class等于myClass的div元素
+			$('div').first(); //选择第1个div元素
+			$('div').eq(5); //选择第6个div元素
+	选择集转移
+			$('div').prev('p'); //选择div元素前面的第一个p元素
+			$('div').prevall('p'); //同级下之前所有元素、
+			$('div').next('p'); //选择div元素后面的第一个p元素
+			$('div').nextall('p'); //同级下之后所有元素、
+			$('div').closest('form'); //选择离div最近的那个form父元素
+			$('div').parent(); //选择div的父元素
+			$('div').children(); //选择div的所有子元素
+			$('div').siblings(); //选择div的同级元素，除了自己。
+			$('div').find('.myClass'); //选择div内的class等于myClass的元素
+
+	对class样式进行操作：
+		$("#div1").addClass("divClass2") //为id为div1的对象追加样式divClass2
+		$("#div1").removeClass("divClass")  //移除id为div1的对象的class名为divClass的样式
+		$("#div1").removeClass("divClass divClass2") //移除多个样式
+		$("#div1").toggleClass("anotherClass") //重复切换anotherClass样式，需要和click同步设置。
+
+	获取读取元素的属性值：
+		$('.div1').css('fontSize');   #不写值只写属性机器就认为是想获取值。
+
+	jquery属性操作
+		1、html() 取出或设置html内容
+			// 取出html内容
+			var $htm = $('#div1').html();
+			// 设置html内容
+			$('#div1').html('<span>添加文字</span>');  //全部的div1都加进去了，但是innerHTML只能对一个操作，用起来比较麻烦。
+		2、text() 取出或设置text内容，不能获取其他的内容。
+			// 取出文本内容
+			var $htm = $('#div1').text();
+			// 设置文本内容
+			$('#div1').text('<span>添加文字</span>');
+		3、attr() 取出或设置某个属性的值
+			// 取出图片的地址
+			var $src = $('#img1').attr('src');
+			// 设置图片的地址和alt属性
+			$('#img1').attr({ src: "test.jpg", alt: "Test Image" });
+		4、prop()获取在匹配的元素集中的第一个元素的属性值。
+			当读取check这个值时，attr读不到，所以用prop读。
+
+	jquery特殊效果：
+		fadeIn() 淡入
+		    $btn.click(function(){
+		        $('#div1').fadeIn(1000,'swing',function(){
+		            alert('done!');
+		        });
+		    });
+		fadeOut() 淡出
+		fadeToggle() 切换淡入淡出
+		hide() 隐藏元素
+		show() 显示元素
+		toggle() 依次展示或隐藏某个元素
+		slideDown() 向下展开
+		slideUp() 向上卷起
+		slideToggle() 依次展开或卷起某个元素
+
+	click点击事件：
+		$('#btn1').click(function(){
+			内部一般用$(this)。this不起作用。
+		    // 内部的this指的是原生对象
+		    // 使用jquery对象用 $(this)
+		    // 获取当前所在层级范围的索引值：$(this).index();
+		    // $("#div1").toggleClass("anotherClass") ，如果点击第一次就加入，第二次就取消，以此类推。
+			超快写法：
+				$(this).addClass('cur').siblings().removeClass('cur');   //我加样式，其他的元素去掉样式
+				$('#contents div').eq($(this).index()).addClass('active').siblings().removeClass('active');  //通过索引值，我加样式其他的去掉样式。
+				$(this).next().slideDown().parent().siblings().children('ul').slideUp();// 控制的话里面不用传值。siblings指的是除他以外的全部其他值。
+		})
+
+jquery动画：
+	$('.div').animate({width:200,height:200},1000,'swing'),function(){alert('动画完了回调');}
+	1.1000表示时间。
+	2.swing开始结束慢，中间快，linear匀速
+	3.回调函数
+
+jQuery循环：each是循环
+	$(',list li').each(function(index){
+		$(this):就是每一个li属性。
+		index就是每个li修饰的处理回调。
+		$(this).html(index); //把0-*填进li中去显示。
+	})
+尺寸相关、滚动事件
+	1、获取和设置元素的尺寸
+		width()、height()    获取元素width和height  
+		innerWidth()、innerHeight()  包括padding的width和height  
+		outerWidth()、outerHeight()  包括padding和border的width和height  
+		outerWidth(true)、outerHeight(true)   包括padding和border以及margin的width和height
+	2、获取元素相对页面的绝对位置
+		$('div').offse()
+	3、获取可视区高度
+		$(window).height();
+	4、获取页面高度
+		$(document).height();
+	5、获取页面滚动距离
+		$(document).scrollTop();  
+		$(document).scrollLeft();
+	6、页面滚动事件
+		$(window).scroll(function(){  
+		    ......  
+		})
+点击底部按钮返回第一行置顶菜单滚动到顶部的效果：
+	<a helf="javascript:;" class="totop"></a>
+	$('.totop').click(function(){
+		$('html body').animate({'scrollTop':0});
+	});
+无缝滚动：
+	1.用jQuery控制复制一份显示然后在两个之间来回切换即可。
+	2.滚动一般是30ms。速率2px;x
+
+jquery事件函数列表//(当有时间有记忆动能想取消掉的时候，在要处理执行的那段消息处的前面加上.stop().意思是在移动的时候附加任何效果无效。)
+	blur() 元素失去焦点
+	focus() 元素获得焦点
+	change() 表单元素的值发生变化
+	click() 鼠标单击
+	dblclick() 鼠标双击
+	mouseover() 鼠标进入（进入子元素也触发一次，实质触发两次）//当事件有记忆功能时这样取消：$('.div').mouseover(function(){$(this).stop().animate({marjin:50})}); 
+	mouseout() 鼠标离开（离开子元素也触发一次，实质触发两次）
+	mouseenter() 鼠标进入（进入子元素不触发）
+	mouseleave() 鼠标离开（离开子元素不触发）
+	hover() 同时为mouseenter和mouseleave事件指定处理函数
+	mouseup() 松开鼠标
+	mousedown() 按下鼠标
+	mousemove() 鼠标在元素内部移动
+	keydown() 按下键盘
+	keypress() 按下键盘
+	keyup() 松开键盘
+	load() 元素加载完毕  等于原生中onload;
+	ready() DOM加载完成
+	resize() 浏览器窗口的大小发生改变
+	scroll() 滚动条的位置发生变化
+	select() 用户选中文本框中的内容
+	submit() 用户递交表单
+	toggle() 根据鼠标点击的次数，依次运行多个函数
+	unload() 用户离开页面
+	$(window).resize(function(){...});
+绑定事件的其他方式：将两个具有相同的事件写在一起，防止代码过多。
+	$(function(){
+	    $('#div1').bind('mouseover click', function(event) {
+	        alert($(this).html());
+	        $(this).unbind('mouseover');//取消绑定
+	    });
+	});
+	取消绑定事件
+	$(function(){
+	    $('#div1').bind('mouseover click', function(event) {
+	        alert($(this).html());
+	        // $(this).unbind();
+	        $(this).unbind('mouseover');
+
+	    });
+	});
+
+主动触发与自定义事件：用bind绑定，trigger触发（原始事件可以触发，自定义事件也可以触发）
+	主动触发
+	可使用jquery对象上的trigger方法来触发对象上绑定的事件。
+	自定义事件
+	除了系统事件外，可以通过bind方法自定义事件，然后用tiggle方法触发这些事件。
+	//给element绑定hello事件
+	$('#div1').bind("hello",function(){
+	    alert("hello world!");
+	});
+	//触发hello事件
+	$('#div1').(function(){
+	    $('#div1').trigger("hello");
+	});
+	
+事件冒泡：
+	通过 event.stopPropagation() 来阻止。
+	或者return false;
+阻止右键菜单
+	$(document).contextmenu(function(event) {
+	    event.preventDefault();
+	});
+合并阻止操作
+	实际开发中，一般把阻止冒泡和阻止默认行为合并起来写，合并写法可以用
+	// event.stopPropagation();
+	// event.preventDefault();
+
+	// 合并写法：
+	return false;
+有大量元素时应该使用事假委托：（事件委托具有减少时间问题的效果）
+一般绑定事件的写法
+	$(function(){//这条会占用大量的时间
+	    $ali = $('#list li');
+	    $ali.click(function(event) {
+	        $(this).css({background:'red'});
+	    });
+	})
+	...
+	<ul id="list">
+	    <li>1</li>
+	    <li>2</li>
+	    <li>3</li>
+	    <li>4</li>
+	    <li>5</li>
+	</ul>
+事件委托的写法
+	$(function(){//这条只是在父窗口执行。
+	    $list = $('#list');
+	    $list.delegate('li', 'click', function(event) {
+	        $(this).css({background:'red'});
+	    });
+	})
+	...
+	<ul id="list">
+	    <li>1</li>
+	    <li>2</li>
+	    <li>3</li>
+	    <li>4</li>
+	    <li>5</li>
+	</ul>
+取消事件委托
+	// ev.delegateTarge 委托对象
+	$(ev.delegateTarge).undelegate();
+	// 上面的例子可使用 $list.undelegate();
+
+jquery元素节点操作(todolist(计划列表)使用节点操作做出来)
+	创建节点
+		var $div = $('<div>');
+		var $div2 = $('<div>这是一个div元素</div>');
+	插入节点
+		1、append()和appendTo()：在现存元素的内部，从后面插入元素
+			var $span = $('<span>这是一个span元素</span>');
+			$('#div1').append($span);
+			......
+			<div id="div1"></div>//
+		2、prepend()和prependTo()：在现存元素的内部，从前面插入元素
+		3、after()和insertAfter()：在现存元素的外部，从后面插入元素
+		4、before()和insertBefore()：在现存元素的外部，从前面插入元素
+	删除节点
+		$('#div1').remove();
+
+
+
+
+
+
+json:
+	{"name":"tom","age":18}
+
+ajax(同源策略):ajax一般要加一个code: 1;用来判断访问是否有效。
+	$.ajax({
+		url: '/path/to/file',
+		type: 'default GET (Other values: POST)',
+		dataType: 'default: Intelligent Guess (Other values: xml, json,jsonp, script, or html)',
+		data: {param1: 'value1'},
+	})
+	.done(function() {
+		console.log("success");
+	})
+	.fail(function() {
+		console.log("error");
+	})
+	.always(function() {
+		console.log("complete");
+	});
+
+	dos:
+		查看目录文件：dir  分屏：dir\p
+		查看node版本：node -v
+		使文件夹成为node服务器：node server.js
+
+jsonp(跨源策略)：(jsonp的访问格式  jsonp没有post请求模式)
+	$.ajax({
+		url: '/path/to/file',
+		type: 'default GET (Other values: POST)',
+		dataType: 'jsonp',
+		data: {param1: 'value1'},
+	})
+	.done(function() {
+		console.log("success");
+	})
+	.fail(function() {
+		console.log("error");
+	})
+	.always(function() {
+		console.log("complete");
+	});
+正则表达式：
+	1.var re3 = /\d/;
+		var str3 = '123abc';
+		alert(re3.test(str3));
+	 2、正则表达式的写法：
+		var re=new RegExp('规则', '可选参数');
+		var re=/规则/参数;
+	3、规则中的字符
+		1）普通字符匹配：
+		如：/a/ 匹配字符 ‘a’，/a,b/ 匹配字符 ‘a,b’
+		2）转义字符匹配：
+		\d 匹配一个数字，即0-9
+		\D 匹配一个非数字，即除了0-9
+		\w 匹配一个单词字符（字母、数字、下划线）
+		\W 匹配任何非单词字符。等价于[^A-Za-z0-9_]
+		\s 匹配一个空白符
+		\S 匹配一个非空白符
+		\b 匹配单词边界
+		\B 匹配非单词边界
+		. 匹配一个任意字符，除了换行符‘\n’和回车符‘\r’
+		\1 重复子项
+	4、量词：对左边的匹配字符定义个数
+		? 出现零次或一次（最多出现一次）
+		+ 出现一次或多次（至少出现一次）
+		* 出现零次或多次（任意次）
+		{n} 出现n次
+		{n,m} 出现n到m次
+		{n,} 至少出现n次
+	5、任意一个或者范围
+		[abc123] : 匹配‘abc123’中的任意一个字符
+		[a-z0-9] : 匹配a到z或者0到9中的任意一个字符
+	6、限制开头结尾^\d+$开头结尾都出现数字
+		^ 以紧挨的元素开头
+		$ 以紧挨的元素结尾
+	7、修饰参数：（加到第二个\后面）
+		g： global，全文搜索，默认搜索到第一个结果接停止
+		i： ingore case，忽略大小写，默认大小写敏感
+		m： multiple lines，多行搜索（更改^ 和$的含义，使它们分别在任意一行对待行首和行尾匹配，而不仅仅在整个字符串的开头和结尾匹配）
+	8、常用函数
+		1、test
+		用法：正则.test(字符串) 匹配成功，就返回真，否则就返回假
+		2、search
+		用法：字符串.search(正则) 匹配成功，返回位置，否则返回-1
+		3、match
+		用法： 字符串.match(正则)；匹配成功，就返回匹配成功的数组，否则就返回null
+		4、replace
+		用法：字符串.replace(正则，新的字符串) 匹配成功的字符去替换新的字符
+		正则默认规则
+		匹配成功就结束，不会继续匹配，区分大小写
+	9、懒惰属性：
+		var re3 = /\d+/;
+		var str3 = '123abc';
+		alert(re3.test(str3));
+本地存储：
+	cookie（可以设置七天是否提示）会携带传输有日期限制
+		最大4K;
+		先引用jquery.cookie.js
+			<script type="text/javascript" src="python/jquery.cookie.js"></script>   /
+				jquery 设置cookie
+				$.cookie('mycookie','123',{expires:7,path:'/'});
+				jquery 获取cookie
+				$.cookie('mycookie');
+	localStorage 不会携带传输没有日期限制会一直存在
+		最大5M;
+		//设置：
+		localStorage.setItem("dat", "456");
+		localStorage.dat = '456';
+		//获取：
+		localStorage.getItem("dat");
+		localStorage.dat
+		//删除
+		localStorage.removeItem("dat");不会携带传输没有日期限制 关闭窗口时就会删掉。
+	sessionStorage 
+		最大5M;
+
+jQueryUI：
+	$('.scroll_bar').draggable({
+		axis:'y',在xy轴移动。
+		conrainment:'parent',加入表示只能在父级元素内移动。
+		opacity:'0.6',表示当鼠标移动时候，元素的透明度。当失去焦点时透明度会变为1。
+		drag:function(ev,ui)(){
+			ev表示回调函数
+			ui表示移动时回调函数、
+		}
+	})
+	Autocomplete百度联想词下拉框。
+	www.jqueryui.com:
+		viewsouce源码。
+手机js：
+	touchstart: //手指放到屏幕上时触发
+	touchmove: //手指在屏幕上滑动式触发
+	touchend: //手指离开屏幕时触发
+	touchcancel: //系统取消touch事件的时候触发，比较少用 
+
+移动端的jquery：
+	zepto:和jquery库一样，用的一种访问方法。他可以定制。（用的人不多）
+		在安卓中（苹果没有）click和tap会有300ms的差别，所以安卓端会用tap。
+		中文：http://www.css88.com/doc/zeptojs_api/
+		zepto自定义构建地址：http://github.e-sites.nl/zeptobuilder/
+		    tap 元素tap的时候触发，此事件类似click，但是比click快。
+		    longTap 当一个元素被按住超过750ms触发。
+		    swipe, swipeLeft, swipeRight, swipeUp, swipeDown 当元素被划过时触发。(可选择给定的方向)
+				$('.div').tap(function(){alert('tap')})
+				swipe触发了一次的效果。
+				swipeLeft
+				swipeRight
+				swipeUp
+				swipeDown
+
+酷炫动画：
+	当没有依赖jquery时记得用onload.
+	swiper.js是一款成熟稳定的应用于PC端和移动端的滑动效果插件，一般用来触屏焦点图、触屏整屏滚动等效果。 swiper分为2.x版本和3.x版本，2.x版本支持低版本浏览器(IE7)，3.x放弃支持低版本浏览器，适合应用在移动端。
+	2.x版本中文网址：http://2.swiper.com.cn/
+	3.x版本中文网地址：http://www.swiper.com.cn/
+
+	如果引用了jquery或者zepto就用min版，否则就直接引用完全版。
+	
+bootstrap框架：(没事多看看官网http://www.bootcss.com/)按钮组和表单组是重点，多去看看组件。
+	<meta charset="UTF-8">
+	<title>取随机数</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<script type="text/javascript" src="python/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="python/bootstrap/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="python/bootstrap/bootstrap-3.3.7-dist/css/bootstrap.min.css">	
+	特小(col-xs-)、小(col-sm-)、中(col-md-)、大(col-lg-)指的是窗口的大小，写进去就行了。
+	一行有12份依次可以写成6,4,3,2,1个，其他没有。
+	col-lg-3 col-md-4 col-sm-6 col-xs-12
+	bootstrap中文网址：http://www.bootcss.com/
+	bootstrap _3和4得区别:
+		bootstrap4它的源码是采用 Sass 语言编写的
+		使用flex的布局方式
+		全部使用了rem为单位（除了部分的margin和padding使用px）
+		Bootstrap 4 共有5种栅格类，依次是特小(col-)、小(col-sm-)、中(col-md-)、大(col-lg-)、特大(col-xl-)
+		偏移列通过 offset- 类来设置，例如：.offset-md-4 是把.col-md-4 往右移了四列格。
+		bootstrap3使用float的布局方式
+		bootstrap3 共有4种栅格类，依次是特小(col-xs-)、小(col-sm-)、中(col-md-)、大(col-lg-)指的是窗口的大小，写进去就行了。
+		bootstrap3里面使用push和pull向左和向右移动 
+	固定宽度响应式容器container：
+		先1170，970，_750最后100%，都居中显示。
+		<div class="container" style="background-color:green">固定宽度响应式容器</div> /
+	流体布局：container-fluid:永远100%.这种一般要设置max-width：200px;限定了他的范围。
+		<div class="container-fluid" style="background-color:green"></div>   /
+	bootstrap 栅格系统:表格居中，表格排版自动优化，
+		bootstrap将页面横向分为12等分，按照12等分定义了适应不同宽度等分的样式类，这些样式类组成了一套响应式、移动设备优先的流式栅格系统：
+			新的选择器：
+				div[class*='col-']{
+					height:10px;
+					border:1px solid black;
+				}
+		<div class="row">//加row的作用是为了补齐那剩余的15px。一般都要加上。
+			//.col-lg-3{col-lg-3}*3+tab键。
+			<div class="col-lg-3">col-lg-3</div>
+			<div class="col-lg-3">col-lg-3</div>
+			<div class="col-lg-3">col-lg-3</div>
+		</div> 
+	bootstrap的偏移：	
+		col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1
+		表示各种环境下的偏移，1表示十二的一份，也就是偏移一份
+bootstrap的按钮：
+	button，input，a都可以做按钮。
+		<!-- Standard button -->
+		<button type="button" class="btn btn-default">（默认样式）Default</button>
+		<!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+		<button type="button" class="btn btn-primary">（首选项）Primary</button>
+		<!-- Indicates a successful or positive action -->
+		<button type="button" class="btn btn-success">（成功）Success</button>
+		<!-- Contextual button for informational alert messages -->
+		<button type="button" class="btn btn-info">（一般信息）Info</button>
+		<!-- Indicates caution should be taken with this action -->
+		<button type="button" class="btn btn-warning">（警告）Warning</button>
+		<!-- Indicates a dangerous or potentially negative action -->
+		<button type="button" class="btn btn-danger">（危险）Danger</button>
+		<!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
+		<button type="button" class="btn btn-link">（链接）Link</button>
+bootstrap 表单
+	1、form 声明一个表单域
+	2、form-inline 内联表单域
+	3、form-horizontal 水平排列表单域
+	4、form-group 表单组、包括表单文字和表单控件
+	5、form-control 文本输入框、下拉列表控件样式
+	6、checkbox checkbox-inline 多选框样式
+	7、radio radio-inline 单选框样式
+	8、input-group 表单控件组
+	9、input-group-addon 表单控件组物件样式 10、input-group-btn 表单控件组物件为按钮的样式
+	10、form-group-lg 大尺寸表单
+	11、form-group-sm 小尺寸表单
+bootstrap 按钮
+	1、btn 声明按钮
+	2、btn-default 默认按钮样式
+	3、btn-primay
+	4、btn-success
+	5、btn-info
+	6、btn-warning
+	7、btn-danger
+	8、btn-link
+	9、btn-lg
+	10、btn-md
+	11、btn-xs
+	12、btn-block 宽度是父级宽100%的按钮
+	13、active
+	14、disabled
+	15、btn-group 定义按钮组
+
+bootstrap 图片
+	img-responsive 声明响应式图片
+
+bootstrap 隐藏类
+	1、hidden-xs
+	2、hidden-sm
+	3、hidden-md
+	4、hidden-lg
+
+bootstrap 字体图标
+	通过字体代替图标，font文件夹需要和css文件夹在同一目录
+
+bootstrap 下拉菜单
+	1、dropdown-toggle
+	2、dropdown-menu
+
+bootstrap 选项卡
+	1、nav
+	2、nav-tabs
+	3、nav-pills
+	4、tab-content
+
+bootstrap 导航条
+	1、navbar 声明导航条
+	2、navbar-default 声明默认的导航条样式
+	3、navbar-inverse 声明反白的导航条样式
+	4、navbar-static-top 去掉导航条的圆角
+	5、navbar-fixed-top 固定到顶部的导航条
+	6、navbar-fixed-bottom 固定到底部的导航条
+	7、navbar-header 申明logo的容器
+	8、navbar-brand 针对logo等固定内容的样式
+	11、nav navbar-nav 定义导航条中的菜单
+	12、navbar-form 定义导航条中的表单
+	13、navbar-btn 定义导航条中的按钮
+	14、navbar-text 定义导航条中的文本
+	9、navbar-left 菜单靠左
+	10、navbar-right 菜单靠右
+
+bootstrap 模态框
+	1、modal 声明一个模态框
+	2、modal-dialog 定义模态框尺寸
+	3、modal-lg 定义大尺寸模态框
+	4、modal-sm 定义小尺寸模态框
+	5、modal-header
+	6、modal-body
+	7、modal-footer
+
+
+

@@ -1,15 +1,13 @@
 //app.js
 App({
   onLaunch: function () {
-    
-    if (!wx.cloud) {
-      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
-    } else {
-      wx.cloud.init({
-        traceUser: true,
-      })
-    }
-
-    this.globalData = {}
+  },
+  globalData:{
+    aName_Domain : "//"
+    // 这里如果想给域名赋值的话用
+    //   var app = getApp();
+    //   app.globalData.userInfo = res.data.data.uid
+    // 如果想取出值用
+    //   userId: getApp().globalData.userInfo
   }
 })

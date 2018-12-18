@@ -1,0 +1,312 @@
+﻿不要把数据库,数据做成闭合
+数据库按照三范式方法写
+
+用户权限问题授予:
+	https://blog.csdn.net/anzhen0429/article/details/78296814
+
+设置utf-8 Unicode->utf8_general_ci
+int 
+浮点型:decimal(5,2)
+char(8)'abcd    '
+varchar(8)'abcd'
+datatime
+bit
+
+主键primary key
+非空not null
+unique
+默认default
+外键foreign key
+系统默认自加auto_increment
+创建一个表create table value(id int auto_increment primary key not null);
+
+数据库
+	创建一个数据库
+		create database 数据库名 charset=utf8;
+	显示所有数据库
+		show databases;
+	删除一个数据库
+		drop database 数据库;
+	使用数据库
+		use 数据库;
+	查看当前选中的数据库
+		select database();
+
+表名(字段一般要多预留几个,因为后期加入数据之后,再去加字段会导致不稳定而整体出错)
+	显示数据库中的所有表名
+		show tables;
+	创建一张表
+		create table name(id int auto_increment primary key not null,name varchar(10) default None not NULL);
+	对表的字段进行修改
+		alter table 表名 add|change|drop ??? ???
+	删除表
+		drop 表名;
+	查看字段名(描述表结构)
+		desc 表名;
+	对表名进行修改
+		rename table 原表名 to 后来的表名;
+	显示创建表的语句
+		show create table 表名;
+
+
+操作表
+	查看
+		select *from 表名;
+	增加
+		insert info 表名 values(,...)
+		insert info 表名(??,...) values('',...);
+		insert info 表名 values('',...),(,...),(,...),(,...);
+		insert info 表名(??,...) values(,...),(,...),(,...),(,...);
+	修改表中的数据
+		update 表名 set 字段=值,...where 条件
+	删除表
+		delete from 表名 where 条件
+	逻辑删除
+		一般设置一个值表示这个数据已经删除,因为数据很珍贵
+
+
+备份和恢复
+	进入超级管理员sudo -s
+	进入mysql库目录菜 cd /var/lib/mysql
+	运行mysqldump命令 mysqldump -uroot -p 数据库名 > ~/Desktop/备份文件.sql 
+	按提示输入mysql密码
+数据恢复
+	链接mysql,创建一个数据库
+	退出连接,执行下面命令
+		mysql -uroot -p 数据库名 < ~/Desktop/备份文件.sql 
+		按提示输入mysql密码
+
+select a,b,c from name,name2 
+where 
+group by ... having...
+select name,count(部门) from name group by 部门;
+order by...
+limit star,count...
+比较运算符:
+	=/>/>=/<=/</>/<>&!=
+as 可做别名,做别名可以被省略.
+消除重复行
+	在select后面列前使用distinct可以消除重复的行.
+	select distinct name,gender from students;
+逻辑运算符
+	and/or/not
+模糊查询
+	name like '%_';  %:表示任意多个字符, _:表示一个任意字符.
+范围查找
+	in表示在一个非连续的范围内,id in(1,2,3,8);
+	between...and... 表示在一个连续的范围内id between 1 and 8;
+空判断
+	null与''是不同的
+	判空 is null
+	gender is null ;
+聚合（只要用到聚合就要考虑到分组）
+	在select之后写:select max(id) from table;
+	count(*) 计算总行数,*和别名计算结果相同.
+	max(id)计算最大值
+	min(id)计算最小值
+	sum(ID)计算一列的总和
+	avg(id)计算平均
+
+原始集->where->结果集->分组->结果集->having->order by
+where是对from进行修改,having是对group by结果集进行修改.
+select * from 表名 order by 列1 desc|asc, 列2 desc|asc...;
+desc表示从大到小降序,asc从小到大,升序.
+
+分页
+	limit start,count
+	从start开始,获取count条数据
+	start索引从0开始
+	python分页一般表示法为(m-1)条数,条数
+外键约束
+	ALTER table_name
+	ADD CONSTRAINT constraint_name
+	FOREIGN KEY foreign_key_name(columns)
+	REFERENCES parent_table(columns)
+	ON DELETE action
+	ON UPDATE action;
+		alter table scores add constraint stu_sco foreign key(stuid) references students(id);
+		create table scores(
+		id int primary key auto_increment,
+		stuid int,
+		subid int,
+		score decimal(5,2),
+		foreign key(stuid) references students(id),
+		foreign key(本表要约束的字段) references 另一张表名(另一张表的字段)
+		);
+	外键的级联操作
+		在删除students表的数据时，如果这个id值在scores中已经存在，则会抛异常
+		推荐使用逻辑删除，还可以解决这个问题
+		可以创建表时指定级联操作，也可以在创建表后再修改外键的级联操作
+		语法
+		alter table scores add constraint stu_sco foreign key(stuid) references students(id) on delete cascade;
+		级联操作的类型包括：
+		restrict（限制）：默认值，抛异常
+		cascade（级联）：如果主表的记录删掉，则从表中相关联的记录都将被删除
+		set null：将外键设置为空
+		no action：什么都不做
+			ON DELETE、ON UPDATE表示事件触发限制，可设参数：
+			RESTRICT（限制外表中的外键改动）
+			CASCADE（跟随外键改动）
+			SET NULL（设空值）
+			SET DEFAULT（设默认值）
+			NO ACTION（无动作，默认的）
+
+事务的四种要求:
+	原子性
+	一致性
+	隔离性
+	持久性
+	使用的引擎(一般默认都是这个引擎不用管):engine=innodb;
+
+	事务
+		开启:begin;
+		提交:commit; python中执行完必须得提交一下
+		回滚:rookback;
+
+索引优化:(一种多加where,一种添加字段索引)
+	多给where添加约束字段,并且字段必须用等号.凡是用大于小于号,前面用了后面也不起作用了.另外用连接语句or也不会索引了.
+	性能检测只在某个端口中适用,下次再打开就不适用.
+	添加索引
+		查看索引:
+			show index from table_name;
+		创建索引:
+			create index indexName ON mytable(username(length));
+		删除索引:
+			drop index [indexName] ON mytable;
+	查看执行SQL的时间:
+		showprofiles;
+
+
+
+
+python交互:
+	安装操作python的驱动包:
+		py2:sudo apt-get install python-mysqldb
+		py3:sudo apt-get install py-mysqldb
+	在文件中引用
+		import MySQLdb
+
+	Connection对象
+	用于建立与数据库的连接
+		创建对象：调用connect()方法
+		conn=connect(参数列表)
+		参数host：连接的mysql主机，如果本机是'localhost'
+		参数port：连接的mysql主机的端口，默认是3306
+		参数db：数据库的名称
+		参数user：连接的用户名
+		参数password：连接的密码
+		参数charset：通信采用的编码方式，默认是'gb2312'，要求与数据库创建时指定的编码一致，否则中文会乱码
+		对象的方法
+		close()关闭连接
+		commit()事务，所以需要提交才会生效
+		rollback()事务，放弃之前的操作
+		cursor()返回Cursor对象，用于执行sql语句并获得结果
+	Cursor对象
+	执行sql语句
+		创建对象：调用Connection对象的cursor()方法
+		cursor1=conn.cursor()
+		对象的方法
+		close()关闭
+		execute(operation [, parameters ])执行语句，返回受影响的行数
+		fetchone()执行查询语句时，获取查询结果集的第一个行数据，返回一个元组
+		next()执行查询语句时，获取当前行的下一行
+		fetchall()执行查询时，获取结果集的所有行，一行构成一个元组，再将这些元组装入一个元组返回
+		scroll(value[,mode])将行指针移动到某个位置
+		mode表示移动的方式
+		mode的默认值为relative，表示基于当前行移动到value，value为正则向下移动，value为负则向上移动
+		mode的值为absolute，表示基于第一条数据的位置，第一条数据的位置为0
+		对象的属性
+		rowcount只读属性，表示最近一次execute()执行后受影响的行数
+		connection获得当前连接对象
+windows安装MySQL:
+	PyMySQL安装方法：在Windows命令行下进入到python安装目录下的Script目录下.
+	运行命令：pip install PyMySQL
+		#coding utf-8
+		import pymysql
+		db = pymysql.connect("139.199.106.187","python","123456789","python")
+		cursor = db.cursor() #创建游标对象
+		cursor.execute("select * from name;") #执行SQL语句
+		data = list(cursor.fetchall()) #获取返回数据
+		print ("Database version %s " %data[3]) #打印数据
+		db.close() # 关闭数据库连接
+
+mysql参数化:
+	参数化为了防止' or 1=1 or'
+	只要在访问的时候注意加在'数组'里面就行了,加特殊字符也能保存在数据库中
+		#coding utf-8
+		import pymysql
+		db = pymysql.connect("139.199.106.187","python","123456789","python")
+		cursor = db.cursor() 
+		sname = ["小李大哥"]
+		cursor.execute("insert into students(sname) values(%s)",sname) #执行SQL语句
+		data = list(cursor.fetchall()) #获取返回数据
+		print ("Database version %s " %data[3]) #打印数据
+		db.close() # 关闭数据库连接
+
+查询一行数据
+    cur.execute('select * from students where id=7')
+    result=cur.fetchone()
+    print result
+查询多行数据
+    cur.execute('select * from students')
+    result=cur.fetchall()
+    print result
+
+
+		查询平均工资大于2000的部门
+		select deptno, avg(sal)
+		from emp
+		group by deptno
+		having avg(sal) > 2000
+
+	select *form emp 
+	where (deptno = 10) and (deptno=20) and  (deptno=30) 
+					<---------
+	oracle解析逻辑表达式 的方向....从右向左
+
+	
+	给员工涨工资，总裁涨1000，经理涨800，其他涨100？
+	第一种方法：
+	 select ename, job, sal , 
+	 	(
+	        	CASE job when 'PRESIDENT' then sal+1000
+						when 'MANAGER' then sal+800
+						else sal + 500
+				END
+	 	)
+	 from emp
+
+	第二种方法：
+	decode(条件,值1,返回值1,值2,返回值2,...值n,返回值n,缺省值)
+	select ename, job, sal 涨前工资, 
+	 	(
+	        	decode(job, 'PRESIDENT', sal+10000, 'MANAGER', sal+800, sal+500)
+	 	)
+	 	
+	 	 涨后工资
+	 from emp
+
+
+外键级联操作：restrict（限制）：默认值，抛异常。
+	cascade(级联)：如果主表的记录删掉，则从表中相关联的记录都将被删除。
+	setnull:将外键设置为空。
+	no action：什么都不做。
+
+连接查询：
+	1.确定实体间是否有关系。
+	2.确定是几对几的关系。
+	3.确定是那个实体中建立字段。
+
+数据库字段名不准一样，不得出现重复信息。
+数据表多创建花费是很大的。所以这时候一般是引用自关联。
+子查询很乱所以很少用了。取而代之的是inner。
+view:
+	视图view就是分装，将一个长句缩短成短句。他会物理的创建一张表，当然只是一个语句表。视图表命名一般是v_name。
+inner：
+	SELECT column_name(s)
+	FROM table_name1
+	INNER JOIN table_name2 
+	ON table_name1.column_name=table_name2.column_name
+
+自关联：foreign key(pid) references areas(id)
+create table areas(aid int primary key,alitle varchar(20),pid int ,foreign key(pid) references areas(id));
